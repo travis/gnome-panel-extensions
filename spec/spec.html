@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE html 
+	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <title>User Installable gnome-panel Extensions</title>
+ <link rel="stylesheet" type="text/css" href="style.css"/>
+
+</head>
+
+<body>
+<div id="header">
+<hr/>
+
+<h1>User Installable gnome-panel Extensions</h1>
+<h2>Functional Specification<h2>
+<h3>Travis Vachon</h3>
+<h3>July 3rd, 2005</h3>
+<p>
+<em>Note:</em> This specification will be more technical than
+a normal functional specification since its intended audience 
+is the GNOME development community.
+</p>
+<p>
+<em>Note:</em> The term "applet" will hopefully be replaced by 
+something that sounds cooler. That would be nice. If anyone 
+has any suggestions, I'd be glad to hear them. Thanks!
+</p>
+<p>
+<em>Note:</em> This specification is not, by any means,
+complete. Comments and revisions would be greatly appreciated. Thanks!
+</p>
+
+<hr/>
+</div>
+
+<div id="main">
+<h2>Overview</h2>
+<p>
+This project will implement a new kind of widget to display on
+the GNOME 2 gnome-panel that can be installed by an end user 
+of GNOME.
+<p>
+Currently, users wishing to install new "applets" must have 
+some knowledge of the inner workings of gnome-panel (that is, 
+they must have some knowledge of bonobo .server files and 
+also know the correct places in the file system to install 
+various pieces of the applet). As a result, the main method
+of applet distribution is inclusion in a debian package or 
+RPM.
+</p>
+<p>
+We would like to implement a system similar to Mozilla Firefox
+and Thunderbird extensions, in which developers can easily
+create a single, user executable(?<em> FIXME? </em>) file 
+to install new applets.
+</p>
+
+<h2>Scenarios</h2>
+<h4>Scenario 1</h4>
+<p>
+Norm, a gardener, loves GNOME, and he especially 
+loves the GNOME panel. Since switching to Linux a year ago, 
+he has greatly appreciated the familiar concept of a "taskbar"
+and desktop menus, but he also likes the easy customizability
+and number of applets included with his favorite Linux 
+distribution.
+</p>
+<p>
+One day, Norm finds "The Gardener" on his favorite GNOME 
+website. The Gardener is  a panel applet that will
+let him monitor the PH of his garden from his wireless laptop.
+This is great news for Norm, since he currently needs to go
+outside to do this. Unfortunately, The Gardener is not included
+in Norm's distribution packages, and the documentation on The
+Gardener's website is absolutely atrocious.
+</p>
+<p>
+Norm decides that his dream of easy PH monitoring will remain
+just that. The next time he updates his operating system,
+however, he notices a new feature in the GNOME panel "Add new applets"
+dialog. Norm clicks on "Get new applets" and is directed to a web
+page with a list of GNOME panel applets including a new version
+of The Gardener.<em> FIXME? </em> Norm clicks on a link for a new page with a 
+detailed description of The Gardener and an "install" link.
+Norm clicks on the install link and gets a dialog box
+confirming that he wants to install The Gardener. Norm hits
+"yes", and immediately sees "The Gardener" pop up on one of the
+panels.
+</p>
+<p class="tech">
+In later versions, it would be nice if the new applet appeared
+on the panel that the user clicked on to get the context menu.
+For the first version, however, it will probably just appear 
+on the first (root) panel.
+</p>
+<h4>Scenario 2</h4>
+<p>
+Toby, a power user who switched to Linux several years ago, 
+has decided he'd like to get into developing for GNOME. As
+a first project, Toby decides to write a simple gnome-panel
+applet. He finds a good PyGTK tutorial, as well as some
+specifics on writing gnome-panel applets. After a week of
+reading and coding, Tony has a functioning applet which allows
+users to interface with GardenPro brand PH monitors and display
+the output from the device on the GNOME panel. 
+</p>
+<p>
+Toby sets up a
+nice website for his new applet, The Gardener, and makes a tar
+file containing the source code and appropriate .server files.
+Toby leaves brief installation instructions in an INSTALL file within
+the archive, and submits the code to a maintainer for the 
+gnome-applets package. The maintainer, unfortunately, doesn't 
+think The Gardener really fits with the rest of the applets in
+the package, and rejects poor Toby's submission. At about the 
+same time, school starts and Toby's work load picks up. As 
+a result, development on The Gardener essentially ceases.
+</p>
+<p>
+A couple months later Toby reads about a new system for user
+installable gnome panel extensions. Toby reads some information
+on the new system, and easily converts The Gardener to the new
+format manually. He then uses a utility to build The Gardener 
+into a single file which he uploads to 
+panelextensions.gnome.org. As part of the upload process, 
+panelextensions.gnome.org gathers some information about
+the file and creates an install link that users can click
+on to install The Gardener. Hundreds of users use Toby's applet, to
+rave reviews.
+</p>
+<p>
+Toby is revitalized and becomes a code machine, eventually
+leading the charge to make GNOME the premier desktop 
+environment in the world.
+</p>
+<h4>Scenario 3</h4>
+<p>
+Norm (our now happy gardener) is approaching mid-life and decides he
+no longer wants to be a gardener. In fact, Norm would like to
+get rid of everything that reminds him of his old life, buy a
+motorcycle and ride into the sunset. In order to do this, Norm would
+like to remove The Gardener and install a new applet that displays
+information about his bike via Bluetooth. 
+</p>
+<p>
+Norm right-clicks on the
+panel, selects "Manage applets" and is presented with a screen listing
+all the applets Norm has installed from
+panelextensions.gnome.org. Norm clicks on The Gardener and hits
+delete. After a confirmation dialog, Norm gets a message that The
+Gardener has been successfully removed from the system. 
+</p>
+<p>
+Norm next finds his way once again to panelextensions.gnome.org and
+finds exactly what he is looking for, an applet called "Big Bike
+Bluetooth Buddy" (BBBB). Norm goes through the same process he went
+through to install The Gardener and is happy to see BBBB pop right up
+on his GNOME panel. Norm has a problem, however, since BBBB is
+initially configured for a BabyBike 900, something Norm would never be
+caught dead riding. Norm right clicks on the applet and selects
+"Preferences" from the context menu that pops up. In a selection box
+on the screen that pops up, Norm finds his KingHog 10000, hits
+"OK" and is delighted to see information about his bike display on the
+screen.
+</p>
+<h4>Scenario 4</h4>
+<p>
+After a couple years, the rough and tumble life of a biker begins to
+wear Norm down. Wanting to settle down and retire, Norm decides to
+become a professional open source developer. Since he's had such good
+luck with GNOME, Norm decides to develop a GNOME panel applet to
+display the size of his retirement account. Norm
+finds a tutorial on developing GNOME panel applets that can be posted on
+panelextensions.gnome.org and learns some Python and XML. 
+</p>
+<p>
+Norm first writes a Python script to interface with his bank's online
+banking system. He uses Inkscape to create a nice icon for his
+applet and creates an appropriate .server file for bonobo. Norm then
+creates a configuration file in XML which specifies the role of each
+piece, including appropriate install locations and other relevant
+information about how the pieces should work together.
+</p>
+<p class="tech">
+"other relevant information about how the pieces should work together"
+is rather vague, and should be clarified. I would greatly appreciate
+the input of anyone with some experience in this kind of this
+regarding what kinds of information should be included in this kind of
+configuration file. One thing I do want to try to do is keep the
+configuration file as simple as possible. Listing each piece and a
+little information about each piece should be just about right. The
+question is, what kind of information? Thanks!
+</p>
+<p>
+Norm now places all of the files for his applet into a directory and
+runs the gnome-extension-bundle-builder (Gebb?). Gebb finds the
+configuration file and packs all of the pieces into a single file,
+probably either a zip file or an XML file.
+</p>
+<p class="tech"
+We would like to be able to include any number of different types of
+files in these bundles. Input on choice of bundle format (XML vs. zip
+vs. ??) would be greatly appreciated.
+</p>
+<p>
+Once Norm finishes creating a bundle, he uploads it to
+panelextensions.gnome.org. The scripts on panelextensions.gnome.org
+automatically detect some information about the applet and prompts
+Norm for any information it would like that it cannot detect
+automatically. 
+</p>
+<p class="tech">
+Ideally Norm will be able to sign his applets before uploading them,
+but this will probably not be present in the first version.
+</p>
+<h2>Non-goals</h2>
+<ul>
+<li>
+We will not provide 100% backwards compatibility. Existing applets will still 
+use the current installation system, though ideally some of the 
+existing applets will be ported to the new system. 
+</li>
+<li>
+We will not support languages other than Python for the first
+release. Using a scripting language for our applets will provide
+excellent portability and make development easy. This will hopefully
+encourage novel applications. Support for other languages can be added later.
+</li>
+
+</ul>
+
+<h2>User Experience Flow Chart</h2>
+<p>
+
+
+</p>
+
+
+</div>
+
+
+
+</body>
+
+
+</html>
