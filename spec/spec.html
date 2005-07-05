@@ -20,15 +20,14 @@
 <h2>Functional Specification<h2>
 <h3>Travis Vachon</h3>
 <h3>July 3rd, 2005</h3>
-<p>
-<em>Note:</em> This specification will be more technical than
-a normal functional specification since its intended audience 
-is the GNOME development community.
-</p>
+
 <p>
 <em>Note:</em> The term "applet" will hopefully be replaced by 
 something that sounds cooler. That would be nice. If anyone 
-has any suggestions, I'd be glad to hear them. Thanks!
+has any suggestions, I'd be glad to hear them. I have occasionally
+used the term "GNOME panel extensions" to mean "New style GNOME panel
+applets." Hopefully this will not cause too much confusion, but should
+be fixed in a future draft. Thanks!
 </p>
 <p>
 <em>Note:</em> This specification is not, by any means,
@@ -83,7 +82,11 @@ Gardener's website is absolutely atrocious.
 Norm decides that his dream of easy PH monitoring will remain
 just that. The next time he updates his operating system,
 however, he notices a new feature in the GNOME panel "Add new applets"
-dialog. Norm clicks on "Get new applets" and is directed to a web
+dialog. 
+</p>
+<img alt="Add new applets dialog" src="addtopanel.png"/>
+<p>
+Norm clicks on "Get new applets" and is directed to a web
 page with a list of GNOME panel applets including a new version
 of The Gardener.<em> FIXME? </em> Norm clicks on a link for a new page with a 
 detailed description of The Gardener and an "install" link.
@@ -182,11 +185,11 @@ panelextensions.gnome.org and learns some Python and XML.
 Norm first writes a Python script to interface with his bank's online
 banking system. He uses Inkscape to create a nice icon for his
 applet and creates an appropriate .server file for bonobo. Norm then
-creates a configuration file in XML which specifies the role of each
+creates a configuration file using XML which specifies the role of each
 piece, including appropriate install locations and other relevant
 information about how the pieces should work together.
 </p>
-<p class="tech">
+<p class="open">
 "other relevant information about how the pieces should work together"
 is rather vague, and should be clarified. I would greatly appreciate
 the input of anyone with some experience in this kind of this
@@ -202,7 +205,7 @@ runs the gnome-extension-bundle-builder (Gebb?). Gebb finds the
 configuration file and packs all of the pieces into a single file,
 probably either a zip file or an XML file.
 </p>
-<p class="tech"
+<p class="tech">
 We would like to be able to include any number of different types of
 files in these bundles. Input on choice of bundle format (XML vs. zip
 vs. ??) would be greatly appreciated.
@@ -223,7 +226,8 @@ but this will probably not be present in the first version.
 <li>
 We will not provide 100% backwards compatibility. Existing applets will still 
 use the current installation system, though ideally some of the 
-existing applets will be ported to the new system. 
+existing applets will be ported to the new system. The first release
+will not include ports of existing applets.
 </li>
 <li>
 We will not support languages other than Python for the first
@@ -233,11 +237,65 @@ encourage novel applications. Support for other languages can be added later.
 </li>
 
 </ul>
-
+<table id="flowcharts">
+<tr>
+<td>
 <h2>User Experience Flow Chart</h2>
+</td>
+<td>
+<h2>Developer Experience Flow Chart</h2>
+</td>
+</tr>
+<tr>
+<td>
+<img alt="user flow chart" src="userexp.png"/>
+</td>
+<td>
+<img alt="devel flow chart" src="develexp.png"/>
+<td>
+</tr>
+</table>
+<h2>Manage Applets Dialog</h2>
 <p>
+When Norm the GNOME user clicks on "Manage Applets" on the GNOME panel
+context menu, he sees a dialog allowing him to manage his GNOME panel
+extensions. 
+</p>
+<img alt="Manage applets dialog" src="manageappletsdialog.png"/>
+<p>
+From this dialog, Norm can delete applets from his computer, adjust
+applet preferences (which he should also be able to do from the
+context menu for the applet's display on the GNOME panel), view
+a list of installed applets, and click on a button to access
+panelextensions.gnome.org. 
 
+</p>
+<h2>Applet Structure</h2>
+<p>
+Applets will consist of three parts:
+<ul>
+<li>
+Resource files like images, XML (glade files, schemas, etc), and
+anything else developers would like to use.
+</li>
+<li>
+A Python script. Future support could be added for other scripting
+languages, but scripting languages will probably be the only ones
+supported. Users should not need to have build tools installed to
+install applets.
+</li>
+<li>
+A "manifest," or some kind of file, probably written in XML, to tie
+the pieces together and give instructions to the installer.
+</li>
+</ul>
 
+Developers will need to simply place the files into a directory
+together and run a utility that will examine the manifest and bundle
+everything together into a single file (the installer). They will then 
+be able to upload the installer to a central distribution site where
+users can simply click on a link to the installer to have the new
+applet appear on their GNOME panel.
 </p>
 
 
