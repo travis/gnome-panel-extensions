@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE html 
+	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <title>panelextensions.gnome.org</title>
+ <link rel="stylesheet" type="text/css" href="specstyle.css"/>
+
+</head>
+
+<body>
+<div id="header">
+<hr/>
+
+<h1>panelextensions.gnome.org</h1>
+<h2>Functional Specification<h2>
+<h3>Travis Vachon</h3>
+<h3>July 5th, 2005</h3>
+
+<p>
+<em>Note:</em> "panelextensions.gnome.org" is a pretty ugly URL, and
+should be replaced with something a little nicer. It would be nice to
+keep the gnome.org domain, but "panelextensions" is kind of long. 
+Suggestions would be very welcome!
+
+</p>
+<p>
+<em>Note:</em> This specification is not, by any means,
+complete. Comments and revisions would be greatly appreciated. Thanks!
+</p>
+
+<hr/>
+</div>
+
+<div id="main">
+<h2>Overview</h2>
+<p>
+panelextensions.gnome.org will serve as a showcase for GNOME panel
+applets developed as specified in the "User Installable gnome-panel
+Extensions", available at <a
+href="http://wso.williams.edu/~tvachon/gpe/spec.html">
+http://wso.williams.edu/~tvachon/gpe/spec.html</a> . Readers should be
+familiar with this specification. 
+<p>
+This site will provide utilities for developers to upload single file
+installation "bundles" created by the panel bundling utility. The site
+will then display information about these applets and allow GNOME
+users to install them by simply clicking on a link to the applet
+bundle. Searching and other capabilities would be nice to add sometime
+after the first release.
+</p>
+<p>
+This site will eventually integrate with the look and feel of the
+gnome.org domain, but the first release will not make this a goal.
+
+<h2>Scenarios</h2>
+<h4>Scenario 1</h4>
+<p>
+Norm the GNOME user has just recently learned about the new applet
+system for the GNOME panel. He'd like to see what kinds of sweet new
+applets are available, so he directs his browser to
+panelextensions.gnome.org and clicks on a link marked "Browse
+Applets". By navigating through several categories of applets, Norm
+finds LatteBuddy 1.0, a panel applet which displays the status of
+Norm's Latte Machine. Norm clicks on a link for more information about
+LatteBuddy and is presented with a screen listing detailed information
+about which Latte machines LatteBuddy supports and other important
+details about the applet. 
+</p>
+
+<p>
+Norm decides this is one applet he cannot live without, so he clicks
+on the "Install" link for LatteBuddy. After being presented with a
+warning about installing software he does not trust, Norm is very
+happy to see LatteBuddy pop up on his GNOME panel.
+</p>
+<h4>Scenario 2</h4>
+<p>
+Toby, a GNOME developer, has created an applet installation bundle for
+his new applet, LatteBuddy. He
+directs his web browser to panelextensions.gnome.org and clicks on a
+link labeled "Upload". Toby is then greeted with a screen prompting
+him to log in or create a new (free) account. Since Toby does not
+have an account, he clicks on "Register" and is presented with a page
+asking for his user name, password, e-mail address, preferred
+language, and optional real name and location. Toby enters the
+requested information, hits submit, and is shown a screen indicating
+that a confirmation e-mail has been sent to Toby's supplied e-mail
+address. Toby opens his mail client and clicks on a link in the e-mail
+he received from panelextensions.gnome.org. A new page opens up in
+Toby's browser which prompts him to enter his user name and password
+to log in.
+</p>
+<p>
+Once he is logged in, Toby finds and clicks on the same "Upload" link
+he clicked on when he first arrived at panelextensions.gnome.org. He
+is then presented with a screen prompting him to enter or browse for 
+the location of the applet installation bundle and pick one of a
+number of predefined categories for his bundle. Toby enters the
+information, clicks on a button marked "Upload!" and is presented with
+a screen telling him that his bundle is being automatically verified
+and processed. After several seconds, Toby is redirected to a page
+with a confirmation message. Toby navigates back to the main page and 
+is pleased to see his applet at the top of the "New Applets" list.
+</p>
+
+<h2>Non-goals</h2>
+<ul>
+<li>
+panelextensions.gnome.org will not, at least at first release, provide
+a repository for old style panel applets. Providing links to sites
+providing this kind of thing would probably be more appropriate at
+first, and this feature may be considered at some later point.
+</li>
+
+</ul>
+
+<h2>Main Page</h2>
+<p>
+The panelextensions.gnome.org main page will provide, at minimum, a
+set of links including "Upload" and "Browse". Eventually it will
+provide listings of recently added, popular, and recommended applets.
+
+<h2>Internal Site Structure</h2>
+<p>
+The top level directory of this site will contain a
+<code>categories</code> which contains directories
+corresponding to each of the applet categories provided by the site
+and several utility directories like <code>style</code> (which will contain
+stylesheets). 
+</p>
+<p>
+When Toby uploads his applet bundle, he is prompted to select a
+category for his applet from a list. Toby selects "monitors", enters
+the location of his applet on his computer and hits
+"Upload".
+</p>
+<p>
+ The site will then use the applet
+"manifest" (within the installation bundle) to get an applet name, 
+in this case, <code>lattebuddy</code>. The site next creates a subdirectory of
+the <code>monitors</code> directory named <code>lattebuddy</code>. 
+</p>
+<p class="open">
+What categories should be present? I think something along the lines
+of "Internet", "System Tools", "Time", "Weather", and a few more would
+be good. Time and weather could probably be combined, but we should
+have a few more. A good first choice could greatly increase the
+usability of the site.
+</p>
+<p class="tech">
+The category directory that an applet's folder resides in should be
+<em> the only </em> factor determining which category the applet is
+listed under on the site. This will allow for easy maintainability
+(ie, it will allow applets to change categories easily), and is
+important unless we want to specify a set number of categories
+developers can classify applets in.
+</p>
+<p>
+The site will next use an XML schema to verify (probably using an
+existing verification service) the applet bundle Toby would like to
+install. If the file is verified, it will be copied to the 
+<code>lattebuddy</code> directory. If it is not, Toby will be
+presented with an error message which will ideally include details on 
+how to fix the problem.
+</p>
+<p class="tech">
+This paragraph assumes we have chosen an XML format for the
+installation bundles. If this does not happen, we should still do some 
+form of verification, but the procedure for this will need to be
+worked out.
+</p>
+<p>
+The site will next use the applet bundle manifest to create an
+information page which it will place in the <code>lattebuddy</code>
+directory. The information page will include a description of the
+applet, screenshots, and, ideally, an area to leave comments. For a
+similar system, please see <a href="http://www.gnome-look.org">
+http://www.gnome-look.org</a>
+</p>
+</div>
+
+
+
+</body>
+
+
+</html>
