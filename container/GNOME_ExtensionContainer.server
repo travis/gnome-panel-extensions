@@ -1,6 +1,6 @@
 <oaf_info>
 
-<oaf_server iid="OAFIID:GNOME_ExtensionContainerApplet_Factory" type="exe" location="/usr/lib/gnome-panel/extension_container_applet.py">
+<oaf_server iid="OAFIID:GNOME_ExtensionContainerApplet_Factory" type="exe" location="/home/travis/development/gnome-panel-extensions/container/extension_container_applet.py">
         <oaf_attribute name="repo_ids" type="stringv">
                 <item value="IDL:Bonobo/GenericFactory:1.0"/>
                 <item value="IDL:Bonobo/Unknown:1.0"/>
@@ -16,9 +16,9 @@
                 <item value="IDL:Bonobo/Control:1.0"/>
                 <item value="IDL:Bonobo/Unknown:1.0"/>
         </oaf_attribute>
-        <oaf_attribute name="name" type="string" _value="Extension Container"/>
-        <oaf_attribute name="description" type="string" _value="Contains GNOME panel extensions"/>
-        <oaf_attribute name="panel:category" type="string" _value="Accessories"/>
+        <oaf_attribute name="name" type="string" value="Extension Container"/>
+        <oaf_attribute name="description" type="string" value="Contains GNOME panel extensions"/>
+        <oaf_attribute name="panel:category" type="string" value="Accessories"/>
         <oaf_attribute name="panel:icon" type="string" value="gnome-blog.png"/>
 </oaf_server>
 
