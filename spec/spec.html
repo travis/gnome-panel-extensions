@@ -186,8 +186,7 @@ Norm first writes a Python script to interface with his bank's online
 banking system. He uses Inkscape to create a nice icon for his
 applet and creates an appropriate .server file for bonobo. Norm then
 creates a configuration file using XML which specifies the role of each
-piece, including appropriate install locations and other relevant
-information about how the pieces should work together.
+piece.
 </p>
 <p class="open">
 "other relevant information about how the pieces should work together"
@@ -207,8 +206,8 @@ probably either a zip file or an XML file.
 </p>
 <p class="tech">
 We would like to be able to include any number of different types of
-files in these bundles. Input on choice of bundle format (XML vs. zip
-vs. ??) would be greatly appreciated.
+files in these bundles. To accomplish this we will be ausing a zip
+format file with a new extension.
 </p>
 <p>
 Once Norm finishes creating a bundle, he uploads it to
@@ -234,6 +233,10 @@ We will not support languages other than Python for the first
 release. Using a scripting language for our applets will provide
 excellent portability and make development easy. This will hopefully
 encourage novel applications. Support for other languages can be added later.
+</li>
+<li>
+We will not support signing applets in the first release. For
+security, this should be a planned addition.
 </li>
 
 </ul>
@@ -270,6 +273,12 @@ a list of installed applets, and click on a button to access
 panelextensions.gnome.org. 
 
 </p>
+<p class="tech">
+For the first version, the manage applets dialog will be accessible
+from context menu of the extension container applet. 
+
+</p>
+
 <h2>Applet Structure</h2>
 <p>
 Applets will consist of three parts:

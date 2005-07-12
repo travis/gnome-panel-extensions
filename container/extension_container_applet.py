@@ -2,10 +2,13 @@
 import pygtk
 pygtk.require('2.0')
 
+
 import sys
 import gtk
 import gobject
 import gnomeapplet
+import zipfile
+
 import manage_applets
 import extension_container_globals
 
@@ -36,14 +39,21 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
 		return True
     
+
+	def run_bundle(bundleFile):
+
+		if not is_zipfile(bundleFile):
+			print "Sorry, ", bundleFile, "is not a geb file"
+		else:
+			
+
+
 	def _manageExtensionsDialog(self, uicomponent, verb):	
 		manage_dialog = manage_applets.ManageApplets(self.prefs_key)
 		manage_dialog.show()
 		manage_dialog.run()
 		manage_dialog.hide()
 
-	def nothing():
-		pass
             
 
 gobject.type_register(ExtensionContainerApplet)
