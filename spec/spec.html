@@ -22,12 +22,10 @@
 <h3>July 3rd, 2005</h3>
 
 <p>
-<em>Note:</em> The term "applet" will hopefully be replaced by 
+<em>Note:</em> The term "extension" may be replaced by 
 something that sounds cooler. That would be nice. If anyone 
-has any suggestions, I'd be glad to hear them. I have occasionally
-used the term "GNOME panel extensions" to mean "New style GNOME panel
-applets." Hopefully this will not cause too much confusion, but should
-be fixed in a future draft. Thanks!
+has any suggestions I'd be glad to hear them!
+
 </p>
 <p>
 <em>Note:</em> This specification is not, by any means,
@@ -279,7 +277,15 @@ from context menu of the extension container applet.
 
 </p>
 
-<h2>Applet Structure</h2>
+<h2>Extension Structure</h2>
+<p>
+For the first release, we will only support extensions written in
+Python. Future support could be added for other languages.
+</p>
+<p>
+All extensions will be subclasses of the PanelExtension class which
+will provide methods to 
+</p>
 <p>
 Applets will consist of three parts:
 <ul>

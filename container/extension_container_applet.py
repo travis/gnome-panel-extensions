@@ -8,7 +8,8 @@ import gtk
 import gobject
 import gnomeapplet
 import zipfile
-
+import panel_extension
+import first_extension
 import manage_applets
 import extension_container_globals
 
@@ -22,19 +23,17 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 		self.__gobject_init__()
 
 	def init(self):
-		label = gtk.Label("Hello World")        
-		self.add(label)	
-
-
         	self.setup_menu_from_file (None, "GNOME_ExtensionContainer.xml",
                 	                   None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
-
-
-		self.show_all()
+		
 		self.prefs_key = self.get_preferences_key()
 		print "Applet prefs located at %s" % (self.prefs_key)
 
 
+		test = first_extension.FirstExtension()
+		self.add(test)
+	
+	
 
 
 		return True
@@ -43,10 +42,13 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 	def run_bundle(bundleFile):
 
 		if not is_zipfile(bundleFile):
-			print "Sorry, ", bundleFile, "is not a geb file"
+			print "Sorry, ", bundleFile, "is not a gnome-extension-bundle file"
 		else:
-			
+			pass
+		
 
+	def nothing():
+		pass
 
 	def _manageExtensionsDialog(self, uicomponent, verb):	
 		manage_dialog = manage_applets.ManageApplets(self.prefs_key)
