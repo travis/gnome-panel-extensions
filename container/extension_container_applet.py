@@ -4,19 +4,24 @@ pygtk.require('2.0')
 
 
 import sys
+import os
+os.chdir("/home/travis/development/gnome-panel-extensions/container/")
+os.chdir("/home/travis/.panelextensions/")
 import gtk
 import gobject
 import gnomeapplet
+import bonobo
+import Bonobo
+
 import zipfile
-import panel_extension
-import first_extension
+
 import manage_applets
 import extension_container_globals
 
 import gettext
 _ = gettext.gettext
 
-
+bundleFile = None
   
 class ExtensionContainerApplet(gnomeapplet.Applet):
     '''
@@ -26,31 +31,115 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     def __init__(self):
         self.__gobject_init__()
         
-    def init(self):
-#        self.setup_menu_from_file (None, "GNOME_ExtensionContainer.xml",
-#                                   None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
+    def init(self, bundleFileName=None):
+        self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
+                                   None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
+        
+        self.load_bundle("test.gpe")#bundleFileName)
+
+        sys.exit()
+        #except:
+        #    label = gtk.Label("No bundle loaded")
+        #    self.add(label)
+
         
         self.prefs_key = self.get_preferences_key()
         print "Applet prefs located at %s" % (self.prefs_key)
+
+
+        #bonobo.activate()
+        #print dir(bonobo)
+        #   list = bonobo.activation.query("has(repo_ids, 'IDL:GNOME/Vertigo/PanelShell:1.0')")
+        #  for i in list: print dir(i)
+        #panel = bonobo.get_object ('OAFIID:GNOME_PanelShell','Bonobo/Unknown')
+
+        #        print dir(panel)
+        #print dir(panel)
+        self.show_all()        	
+
         
-        self.show_all()
-        test = first_extension.FirstExtension()
-        self.add(test)
-	
-	
-        
+
         
         return True
     
     
-    def run_bundle(bundleFile):
+    def load_bundle(self, bundleFileName):
+        """
+        Loads up bundle and returns initialized extension object
+        """
 
-        if not is_zipfile(bundleFile):
-            print "Sorry, ", bundleFile, "is not a gnome-extension-bundle file"
+        if not zipfile.is_zipfile(bundleFileName):
+            print "Sorry, ", bundleFileName, "is not a gnome-extension-bundle file"
         else:
-            pass
+            widget = self.get_children()
+
+            try: self.remove(widget[0]) #dirty 
+            except: print "could not remove label"
+
+            sys.path.insert(0, bundleFileName)
+
+            manifest_file = open("manifest.gpem", 'r')
+
+            print manifest_file.read()
+            
+            
+            try:
+                import __extension_init__ as bundleInit
+                self.bundleFile = zipfile.ZipFile(bundleFileName)
+                label = gtk.Label("Loaded " + bundleFileName)
+                self.add(label)
+                self.show_all()
+                
+            except:
+                label = gtk.Label("Could not load " + bundleFileName)
+                self.add(label)
+                self.show_all()
+
+            return bundleInit
         
-        
+#    def setup_extension_menu(self):
+#        """
+#        setup_context_menu_from_file uses a variable defined in the init.py file
+#        in a bundle to find the variables needed to use gnomeapplet.Applet's
+#        setup_menu function. It will also unpack the needed file
+#        and import the xml into menu_xml
+#        """
+#        if self.bundleInit:
+#
+#            xml_menu_name = str(self.bundleFile.read(self.bundleInit.xml_menu_file_name))
+#            print xml_menu_name
+#            self.setup_menu(xml_menu_name, [(_("Test"), self.nothing)],None)
+#
+#            
+#
+#            
+#
+#        
+#        #       print "Could not load bundle menu"
+#        else:
+#            print "Bundle not loaded, could not create menu"
+#
+#    def setup_extension_menu_from_file(self, xml_menu_file_name, verbs):
+#        if self.bundleInit:
+#            #change the working directory to /tmp
+#            old_wd = os.getcwd()
+#            os.chdir("/tmp/")
+#            #temporarily expand the xml file
+#            
+#            temp_xml_menu_file = open (xml_menu_file_name, 'w')
+#            temp_xml_menu_file.write(self.bundleFile.read(xml_menu_file_name))
+#            temp_xml_menu_file.close()
+#
+#
+#            self.setup_menu_from_file (os.getcwd() ,xml_menu_file_name, None, verbs)
+#            
+#            #cleanup on aisle 10
+#            os.remove(xml_menu_file_name)
+#            #change the working directory back
+#            os.chdir(old_wd)
+#        else:
+#            print "Bundle not loaded, could not create menu"
+            
     def nothing():
         pass
 
@@ -67,7 +156,7 @@ gobject.type_register(ExtensionContainerApplet)
 
 def foo(applet, iid):
     print "Returning container applet"
-    return applet.init()
+    return applet.init("test.gpe")
 
 # run in seperate window for testing
 if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
@@ -90,8 +179,17 @@ if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
 	gtk.main()
 	sys.exit()
 
-gnomeapplet.bonobo_factory("OAFIID:GNOME_ExtensionContainerApplet_Factory", 
+def start_bundle(bundleName):
+    global bundleFile
+    global foo
+    global ExtensionContainerApplet
+    bundleFile = bundleName
+    
+    gnomeapplet.bonobo_factory("OAFIID:GNOME_ExtensionContainerApplet_Factory", 
                             ExtensionContainerApplet.__gtype__, 
                             "ExtensionContainer", "0", foo)
 
+
+start_bundle("test.gpe")
 print "Done waiting in factory, returning... If this seems wrong, perhaps there is another copy of the Container factory running?"
+
