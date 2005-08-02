@@ -10,6 +10,10 @@ os.chdir("/home/travis/.panelextensions/")
 import gtk
 import gobject
 import gnomeapplet
+import StringIO
+
+import xml.dom.minidom
+
 import bonobo
 import Bonobo
 
@@ -21,7 +25,79 @@ import extension_container_globals
 import gettext
 _ = gettext.gettext
 
-bundleFile = None
+
+
+class InvalidBundle(StandardError):
+    '''
+    Used to indicate a bundle is either non-existent or is missing
+    a necessary piece.
+    '''
+
+class Bundle(object):
+    '''
+    Bundle is a class to contain a bundle which provides
+    methods to allow for easy extraction of files
+    from the bundle.
+    '''
+    def __init__(self, bundleFileName):
+        # Check sanity of bundle file        
+        if zipfile.is_zipfile(bundleFileName):
+            self.bundleFile = zipfile.ZipFile(bundleFileName)
+
+            print bundleFileName
+
+            sys.path.insert(0, os.path.join(extension_container_globals.extension_dir, bundleFileName))
+            # Allows us to import python scripts in the bundle file
+            # as if they were in a directory
+            
+            
+        else:
+           
+            print "Sorry, ", bundleFileName, "is not a gnome-extension-bundle file"
+            raise InvalidBundle, bundleFileName+"is not a zip file"
+
+        if not self.bundleFile.namelist().count("manifest.gpem") == 1:
+            print "Raise NOT A BUNDLE exception"
+            # Since all bundles must contain manifest.gpem
+            raise InvalidBundle, "Bundle does not contain manifest.gpem"
+        
+        
+
+        self.manifest_dom = xml.dom.minidom.parseString(self.bundleFile.read('manifest.gpem'))
+        bundleFileList = self.manifest_dom.getElementsByTagName('file')
+
+        for fileElement in bundleFileList:
+            fileType = fileElement.getAttribute('type')
+            
+            if fileType == 'main':
+                
+                try:
+                    module_name = fileElement.getAttribute('name').split('.')
+                    
+                    if module_name[1] == 'py':
+                        module_name = module_name[0]
+                    else:
+                        print "Raise exception"
+                        return
+                    
+                    self.main_module = __import__(module_name)
+                    
+                    
+                    
+                except:
+                    print "Could not import main module"
+                    raise 
+        
+
+    def info(self):
+        print self.manifest_dom
+
+    def get_extension(self):
+        return self.main_module.return_extension(self)
+        
+
+    def open(self, filename):
+        return StringIO.StringIO(self.bundle_file.read(filename))
   
 class ExtensionContainerApplet(gnomeapplet.Applet):
     '''
@@ -30,14 +106,21 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     '''
     def __init__(self):
         self.__gobject_init__()
-        
-    def init(self, bundleFileName=None):
-        self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
-                                   None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
-        
-        self.load_bundle("test.gpe")#bundleFileName)
 
-        sys.exit()
+    def init(self, bundleFileName=''):
+    #    self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
+     #                              None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
+        
+        self.bundle = self.load_bundle(bundleFileName)
+
+        self.extension = self.bundle.get_extension()
+
+        self.extension._register_container_applet(self)
+        self.extension.setup_menu()
+
+        self.add(self.extension)
+
+        #sys.exit()
         #except:
         #    label = gtk.Label("No bundle loaded")
         #    self.add(label)
@@ -47,14 +130,6 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         print "Applet prefs located at %s" % (self.prefs_key)
 
 
-        #bonobo.activate()
-        #print dir(bonobo)
-        #   list = bonobo.activation.query("has(repo_ids, 'IDL:GNOME/Vertigo/PanelShell:1.0')")
-        #  for i in list: print dir(i)
-        #panel = bonobo.get_object ('OAFIID:GNOME_PanelShell','Bonobo/Unknown')
-
-        #        print dir(panel)
-        #print dir(panel)
         self.show_all()        	
 
         
@@ -63,82 +138,38 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         return True
     
     
-    def load_bundle(self, bundleFileName):
+    def load_bundle(self, bundleFileName=''):
         """
-        Loads up bundle and returns initialized extension object
+        Loads up bundle and returns initialized extension object.
+        Returns a manifest dom object which appears to be the bundle.
+
+        Methods included in the dom object 'd' include:
+             d.getElementByTagName(tagName)
+             
         """
-
-        if not zipfile.is_zipfile(bundleFileName):
-            print "Sorry, ", bundleFileName, "is not a gnome-extension-bundle file"
-        else:
-            widget = self.get_children()
-
-            try: self.remove(widget[0]) #dirty 
-            except: print "could not remove label"
-
-            sys.path.insert(0, bundleFileName)
-
-            manifest_file = open("manifest.gpem", 'r')
-
-            print manifest_file.read()
-            
-            
-            try:
-                import __extension_init__ as bundleInit
-                self.bundleFile = zipfile.ZipFile(bundleFileName)
-                label = gtk.Label("Loaded " + bundleFileName)
-                self.add(label)
-                self.show_all()
-                
-            except:
-                label = gtk.Label("Could not load " + bundleFileName)
-                self.add(label)
-                self.show_all()
-
-            return bundleInit
         
-#    def setup_extension_menu(self):
-#        """
-#        setup_context_menu_from_file uses a variable defined in the init.py file
-#        in a bundle to find the variables needed to use gnomeapplet.Applet's
-#        setup_menu function. It will also unpack the needed file
-#        and import the xml into menu_xml
-#        """
-#        if self.bundleInit:
-#
-#            xml_menu_name = str(self.bundleFile.read(self.bundleInit.xml_menu_file_name))
-#            print xml_menu_name
-#            self.setup_menu(xml_menu_name, [(_("Test"), self.nothing)],None)
-#
-#            
-#
-#            
-#
-#        
-#        #       print "Could not load bundle menu"
-#        else:
-#            print "Bundle not loaded, could not create menu"
-#
-#    def setup_extension_menu_from_file(self, xml_menu_file_name, verbs):
-#        if self.bundleInit:
-#            #change the working directory to /tmp
-#            old_wd = os.getcwd()
-#            os.chdir("/tmp/")
-#            #temporarily expand the xml file
-#            
-#            temp_xml_menu_file = open (xml_menu_file_name, 'w')
-#            temp_xml_menu_file.write(self.bundleFile.read(xml_menu_file_name))
-#            temp_xml_menu_file.close()
-#
-#
-#            self.setup_menu_from_file (os.getcwd() ,xml_menu_file_name, None, verbs)
-#            
-#            #cleanup on aisle 10
-#            os.remove(xml_menu_file_name)
-#            #change the working directory back
-#            os.chdir(old_wd)
-#        else:
-#            print "Bundle not loaded, could not create menu"
+        os.chdir(extension_container_globals.extension_dir)
+
+        bundle = None
+        
+        widget = self.get_children()
+
+        try: self.remove(widget[0]) #dirty 
+        except:
+            print "could not remove label"
+            
+        try: bundle = Bundle(bundleFileName)
+        except:
+            print "Could not create bundle"
+            label = gtk.Label("Could not load " + bundleFileName)
+            self.add(label)
+            self.show_all()
+            raise
+
+        return bundle
+
+
+
             
     def nothing():
         pass
