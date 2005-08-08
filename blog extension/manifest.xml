@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/css" href="styles/manifest.css" ?><gpem> 
+<name>Blog Applet</name>
+<description>Blog Applet administers blogs</description>
+
+<file name="blog_applet.py" type="main"/><file name="GNOME_BlogApplet.xml" type="menu"/></gpem>
