@@ -21,8 +21,8 @@ class PanelExtension(gtk.EventBox):
 		self.applet = None
 		self.bundle = bundle
 
-		
-			
+	def get_preferences_key():
+		pass
 
 	def setup_extension_menu(self, xml, verbs):
 		if self.applet:

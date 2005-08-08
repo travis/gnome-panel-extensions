@@ -8,31 +8,40 @@
 
 <head>
  <title>panelextensions.gnome.org</title>
- <link rel="stylesheet" type="text/css" href="global.css"/>
+ <link rel="stylesheet" type="text/css" href="styles/global.css"/>
+
+
+
 
 </head>
 
 <body>
 
-<div id="titlebar">
-<span id="pagetitle">
-GNOME panel extensions
-<span>
-</div>
+ <div id="titlebar">
+  <span id="pagetitle">
+  GNOME panel extensions
+  <span>
+ </div>
 
-<div id="sidebar">
-test side
-</div>
+ <div id="sidebar">
+  <script language="JavaScript"
+     src="scripts/navbar.js" name="navBarScript">
+  </script>
+ </div>
 
-<div id="main">
+ <div id="main">
+  <iframe
+     id="extensionlist"
+     name="ExtensionList"
+     src="scripts/extension_list.py/return_html_list"
+     scrolling="yes">
 
-<div id="extension_list">
+
+  </iframe>
 
 
 
-</div>
-
-</div>
+  </div>
 
 
 

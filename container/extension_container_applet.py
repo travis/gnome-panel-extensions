@@ -9,7 +9,9 @@ os.chdir("/home/travis/development/gnome-panel-extensions/container/")
 os.chdir("/home/travis/.panelextensions/")
 import gtk
 import gobject
+import gconf
 import gnomeapplet
+
 import StringIO
 
 import xml.dom.minidom
@@ -21,83 +23,17 @@ import zipfile
 
 import manage_applets
 import extension_container_globals
+import extension_bundle
 
 import gettext
 _ = gettext.gettext
 
 
+if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
+    run_in_window = True
+else:
+    run_in_window = False
 
-class InvalidBundle(StandardError):
-    '''
-    Used to indicate a bundle is either non-existent or is missing
-    a necessary piece.
-    '''
-
-class Bundle(object):
-    '''
-    Bundle is a class to contain a bundle which provides
-    methods to allow for easy extraction of files
-    from the bundle.
-    '''
-    def __init__(self, bundleFileName):
-        # Check sanity of bundle file        
-        if zipfile.is_zipfile(bundleFileName):
-            self.bundleFile = zipfile.ZipFile(bundleFileName)
-
-            print bundleFileName
-
-            sys.path.insert(0, os.path.join(extension_container_globals.extension_dir, bundleFileName))
-            # Allows us to import python scripts in the bundle file
-            # as if they were in a directory
-            
-            
-        else:
-           
-            print "Sorry, ", bundleFileName, "is not a gnome-extension-bundle file"
-            raise InvalidBundle, bundleFileName+"is not a zip file"
-
-        if not self.bundleFile.namelist().count("manifest.gpem") == 1:
-            print "Raise NOT A BUNDLE exception"
-            # Since all bundles must contain manifest.gpem
-            raise InvalidBundle, "Bundle does not contain manifest.gpem"
-        
-        
-
-        self.manifest_dom = xml.dom.minidom.parseString(self.bundleFile.read('manifest.gpem'))
-        bundleFileList = self.manifest_dom.getElementsByTagName('file')
-
-        for fileElement in bundleFileList:
-            fileType = fileElement.getAttribute('type')
-            
-            if fileType == 'main':
-                
-                try:
-                    module_name = fileElement.getAttribute('name').split('.')
-                    
-                    if module_name[1] == 'py':
-                        module_name = module_name[0]
-                    else:
-                        print "Raise exception"
-                        return
-                    
-                    self.main_module = __import__(module_name)
-                    
-                    
-                    
-                except:
-                    print "Could not import main module"
-                    raise 
-        
-
-    def info(self):
-        print self.manifest_dom
-
-    def get_extension(self):
-        return self.main_module.return_extension(self)
-        
-
-    def open(self, filename):
-        return StringIO.StringIO(self.bundle_file.read(filename))
   
 class ExtensionContainerApplet(gnomeapplet.Applet):
     '''
@@ -107,30 +43,59 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     def __init__(self):
         self.__gobject_init__()
 
-    def init(self, bundleFileName=''):
-    #    self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
-     #                              None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
+    def init(self, bundleFileName=None):
+        #    self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
+        #                              None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
+
+        global run_in_window
+
+        prefs_key = self.get_preferences_key()
+
+        print "Applet preferences located at %s" % prefs_key
+
+        if bundleFileName == None:
+            client = gconf.client_get_default()
+            
+            try: bundleFileName = client.get(prefs_key + "/bundle_file")
+            except:
+                print "Could not get bundle file name from gconf"
+                bundleFileName = None
         
-        self.bundle = self.load_bundle(bundleFileName)
+            
+        if not bundleFileName == None:
+            try: 
+                self.bundle = self.load_bundle(bundleFileName)
+            except:
+                print "Could not load " + bundleFileName
+        else:
+            self.bundle = None
+            self.big_box = gtk.HBox()
+            self.big_box.pack_start(gtk.Label("Menu"))
+            self.toggle = gtk.ToggleButton()
+            button_box = gtk.HBox()
+            button_box.pack_start(gtk.Label(_("Load Extension")))
+            self.toggle.add(button_box)
+            self.toggle.connect("toggled", self._onLoadDialogToggle)
 
-        self.extension = self.bundle.get_extension()
+            self.big_box.add(self.toggle)
 
-        self.extension._register_container_applet(self)
-        self.extension.setup_menu()
+            self.load_window = manage_applets.AlignedWindow(self.toggle)
+            self.load_window.set_modal(True)
 
-        self.add(self.extension)
+            self.loader = manage_applets.ExtensionLoader(self)
 
-        #sys.exit()
-        #except:
-        #    label = gtk.Label("No bundle loaded")
-        #    self.add(label)
-
-        
-        self.prefs_key = self.get_preferences_key()
-        print "Applet prefs located at %s" % (self.prefs_key)
+            self.load_window.add(self.loader)
+            self.loader.show()
+            
+            self.add(self.big_box)
+            self.show_all()
+            
 
 
-        self.show_all()        	
+
+        print "Load dialog started"
+      
+                            
 
         
 
@@ -141,10 +106,8 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     def load_bundle(self, bundleFileName=''):
         """
         Loads up bundle and returns initialized extension object.
-        Returns a manifest dom object which appears to be the bundle.
 
-        Methods included in the dom object 'd' include:
-             d.getElementByTagName(tagName)
+        Returns a Bundle object, as defined in extension_container_globals
              
         """
         
@@ -154,19 +117,29 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         
         widget = self.get_children()
 
-        try: self.remove(widget[0]) #dirty 
-        except:
-            print "could not remove label"
+        try: self.remove(widget[0]) #dirty
+        except: print "Could not remove label"
+
+        self.load_window.destroy()
+        #except: print "Could not destroy load_dialog"
+
+        bundle = extension_bundle.Bundle(bundleFileName)
             
-        try: bundle = Bundle(bundleFileName)
+        try: bundle = extension_bundle.Bundle(bundleFileName)
         except:
             print "Could not create bundle"
-            label = gtk.Label("Could not load " + bundleFileName)
-            self.add(label)
-            self.show_all()
-            raise
 
-        return bundle
+        if bundle:
+            self.extension = bundle.get_extension()
+
+            self.extension._register_container_applet(self)
+            self.extension.setup_menu()
+
+            self.add(self.extension)
+            self.show_all()        	
+    
+
+
 
 
 
@@ -174,22 +147,21 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     def nothing():
         pass
 
-    def _manageExtensionsDialog(self, uicomponent, verb):	
-        manage_dialog = manage_applets.ManageApplets(self.prefs_key)
-        manage_dialog.show()
-        manage_dialog.run()
-        manage_dialog.hide()
+
+    def _onLoadDialogToggle(self, button):
+        if self.toggle.get_active():
+            self.load_window.positionWindow()
+            self.load_window.show()
+            self.load_window.grab_focus()
+        else:
+            self.load_window.hide()
+
+    
 
             
 
 gobject.type_register(ExtensionContainerApplet)
 
-
-def foo(applet, iid):
-    print "Returning container applet"
-    return applet.init("test.gpe")
-
-# run in seperate window for testing
 if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
 	main_window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 	main_window.set_title("Python Applet")
@@ -197,18 +169,21 @@ if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
 	app = ExtensionContainerApplet()
 	app.init()
 
+
+        
 	main_window.add(app)
 	
 	main_window.show_all()
 
-	man = manage_applets.ManageApplets("/blah")
-	man.show()
-	man.run()
-	man.hide()
-	
-
 	gtk.main()
 	sys.exit()
+
+
+def foo(applet, iid):
+    print "Returning container applet"
+    return applet.init()
+
+# run in seperate window for testing
 
 def start_bundle(bundleName):
     global bundleFile

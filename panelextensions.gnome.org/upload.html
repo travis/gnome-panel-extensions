@@ -8,27 +8,28 @@
 
 <head>
  <title>panelextensions upload page</title>
- <link rel="stylesheet" type="text/css" href="style.css"/>
+ <link rel="stylesheet" type="text/css" href="styles/global.css"/>
 
 </head>
 
 <body>
-<div id="titlebar">
-<span id="pagetitle">
-GNOME panel extensions
-<span>
-</div>
-
-<div id="sidebar">
-test side
-</div>
-
-<div id="main">
-<form method="GET" action="upload.jsp">
 
 
+<form method="POST" enctype="multipart/form-data" action="scripts/upload.py/test">
+
+Select bundle file:
+    <input type="file" name="bundle" size="32" maxlength="80"/>
+    
+    <br/>
+
+    <p>
+       <input type="radio" name="uploadtype" value="new"/> New
+       <input type="radio" name="uploadtype" value="update"/> Update
+    </p>
+
+    <input type="submit" value="Upload"/>
 </form>
-</div>
+
 
 </body>
 
