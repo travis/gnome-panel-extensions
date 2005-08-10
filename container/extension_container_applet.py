@@ -3,25 +3,15 @@ import pygtk
 pygtk.require('2.0')
 
 
-import sys
+import sys, traceback
 import os
-os.chdir("/home/travis/development/gnome-panel-extensions/container/")
-os.chdir("/home/travis/.panelextensions/")
+
 import gtk
 import gobject
 import gconf
 import gnomeapplet
 
-import StringIO
-
-import xml.dom.minidom
-
-import bonobo
-import Bonobo
-
-import zipfile
-
-import manage_applets
+import load_extensions
 import extension_container_globals
 import extension_bundle
 
@@ -34,6 +24,15 @@ if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
 else:
     run_in_window = False
 
+class NoBundleLoadedError(Exception):
+    '''
+    Raised when some object requests a loaded bundle before a bundle has been loaded.
+    '''
+    def __init__(self, *args):
+        Exception.__init__(self, *args)
+        self.wrapped_exc = sys.exc_info()
+
+    
   
 class ExtensionContainerApplet(gnomeapplet.Applet):
     '''
@@ -43,62 +42,70 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     def __init__(self):
         self.__gobject_init__()
 
+
     def init(self, bundleFileName=None):
-        #    self.setup_menu_from_file ("/home/travis/development/gnome-panel-extensions/container/" ,"GNOME_ExtensionContainer.xml",
-        #                              None, [(_("About"), self.nothing), (_("Pref"), self.nothing),(_("Manage"), self._manageExtensionsDialog)])
 
-        global run_in_window
+        #if (__debug__):
+        #    self.log = file("log.txt", 'w')
 
-        prefs_key = self.get_preferences_key()
+        self.loaded_bundle = None
 
-        print "Applet preferences located at %s" % prefs_key
+        self.prefs_key = self.get_preferences_key()
+        self.client = gconf.client_get_default()
+        
+        print "Applet preferences located at %s" % self.prefs_key
 
         if bundleFileName == None:
-            client = gconf.client_get_default()
+
             
-            try: bundleFileName = client.get(prefs_key + "/bundle_file")
+            try: bundleFileName = self.client.get_string(self.prefs_key + "/bundle_file")
             except:
-                print "Could not get bundle file name from gconf"
+                #if (__debug__):
+                #    self.log.write(self.prefs_key + "/bundle_file\n")
+                #    self.log.write("Could not get bundle file name from gconf")
+                #    traceback.print_exc(file=self.log)
                 bundleFileName = None
         
             
         if not bundleFileName == None:
+            #if (__debug__):
+            #    self.log.write(bundleFileName)
+                
             try: 
                 self.bundle = self.load_bundle(bundleFileName)
             except:
                 print "Could not load " + bundleFileName
+                #if (__debug__):
+                #    self.log.write("Could not load " + bundleFileName + "\n")
+
+                
+
         else:
             self.bundle = None
             self.big_box = gtk.HBox()
             self.big_box.pack_start(gtk.Label("Menu"))
             self.toggle = gtk.ToggleButton()
             button_box = gtk.HBox()
-            button_box.pack_start(gtk.Label(_("Load Extension")))
+            button_box.pack_start(gtk.Label("Load Extension"))
             self.toggle.add(button_box)
             self.toggle.connect("toggled", self._onLoadDialogToggle)
 
             self.big_box.add(self.toggle)
 
-            self.load_window = manage_applets.AlignedWindow(self.toggle)
+            self.load_window = load_extensions.AlignedWindow(self.toggle)
             self.load_window.set_modal(True)
 
-            self.loader = manage_applets.ExtensionLoader(self)
+            self.loader = load_extensions.ExtensionLoader(self)
 
             self.load_window.add(self.loader)
             self.loader.show()
+
+            if (__debug__):
+                print "Load window started"
             
             self.add(self.big_box)
+            self.connect("destroy", self._cleanup)
             self.show_all()
-            
-
-
-
-        print "Load dialog started"
-      
-                            
-
-        
-
         
         return True
     
@@ -107,21 +114,24 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         """
         Loads up bundle and returns initialized extension object.
 
-        Returns a Bundle object, as defined in extension_container_globals
+        Returns a Bundle object, as defined in extension_bundle
              
         """
-        
+
+        if not os.path.isdir(extension_container_globals.extension_dir):
+            os.mkdir(extension_container_globals.extension_dir)
+
         os.chdir(extension_container_globals.extension_dir)
 
         bundle = None
         
         widget = self.get_children()
 
-        try: self.remove(widget[0]) #dirty
+        try: self.remove(widget[0])
         except: print "Could not remove label"
 
-        self.load_window.destroy()
-        #except: print "Could not destroy load_dialog"
+        try: self.load_window.destroy()
+        except: print "Could not destroy load_dialog"
 
         bundle = extension_bundle.Bundle(bundleFileName)
             
@@ -130,22 +140,27 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
             print "Could not create bundle"
 
         if bundle:
+            self.loaded_bundle = bundle
+            
             self.extension = bundle.get_extension()
 
             self.extension._register_container_applet(self)
-            self.extension.setup_menu()
+
+            self.extension.__extension_init__() #run the applet code
+            
 
             self.add(self.extension)
             self.show_all()        	
     
+    def get_loaded_bundle(self):
+        if self.loaded_bundle:
+            return self.loaded_bundle
+        else:
+            raise NoBundleLoadedError, "No bundle loaded, could not return"
 
+    def _cleanup(self, uicomponent):
+        self.client.remove_dir(self.prefs_key)
 
-
-
-
-            
-    def nothing():
-        pass
 
 
     def _onLoadDialogToggle(self, button):
@@ -185,17 +200,11 @@ def foo(applet, iid):
 
 # run in seperate window for testing
 
-def start_bundle(bundleName):
-    global bundleFile
-    global foo
-    global ExtensionContainerApplet
-    bundleFile = bundleName
-    
-    gnomeapplet.bonobo_factory("OAFIID:GNOME_ExtensionContainerApplet_Factory", 
+gnomeapplet.bonobo_factory("OAFIID:GNOME_ExtensionContainerApplet_Factory", 
                             ExtensionContainerApplet.__gtype__, 
                             "ExtensionContainer", "0", foo)
 
 
-start_bundle("test.gpe")
+
 print "Done waiting in factory, returning... If this seems wrong, perhaps there is another copy of the Container factory running?"
 

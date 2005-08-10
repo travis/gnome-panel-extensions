@@ -25,14 +25,24 @@ icon_theme = gtk.icon_theme_get_default()
 icon_info = icon_theme.lookup_icon('gnome-blog', -1, 0)
 gtk.window_set_default_icon_from_file(icon_info.get_filename())
 
-def return_extension(bundle):
-    return BloggerApplet(bundle)
+def return_extension():
+    return BloggerApplet()
         
 class BloggerApplet(panel_extension.PanelExtension):
-    def __init__(self, bundle):
+    def __init__(self):
         self.__gobject_init__
-        
-        panel_extension.PanelExtension.__init__(self, bundle)
+        panel_extension.PanelExtension.__init__(self)
+
+
+    def __extension_init__(self):
+
+        self.mybundle = self.get_bundle()
+
+        menu_file = self.mybundle.open("GNOME_BlogApplet.xml")
+
+        self.setup_extension_menu_from_file (menu_file,
+                                            [(_("About"), self._showAboutDialog),
+                                             ("Pref", self._openPrefs)])
 
         self.toggle = gtk.ToggleButton()
         self.applet_tooltips = gtk.Tooltips()
@@ -71,9 +81,8 @@ class BloggerApplet(panel_extension.PanelExtension):
         
         return True
     
-    def setup_menu(self):
-        self.setup_extension_menu_from_file ("GNOME_BlogApplet.xml",
-                                             [(_("About"), self._showAboutDialog), ("Pref", self._openPrefs)])
+    
+    
 
     def _showAboutDialog(self, uicomponent, verb):
         gnome.ui.About(gnome_blog_globals.name, gnome_blog_globals.version, "Copyright 2003 Seth Nickell",
