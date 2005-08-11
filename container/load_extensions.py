@@ -62,32 +62,59 @@ class AlignedWindow(gtk.Window):
         self.show()
 
 
+class AppletDescription(gtk.EventBox):
+    def __init__(self, extension_loader, bundle_name, name="No name", description="No Description"):
+        gtk.EventBox.__init__(self)
+        self.extension_loader = extension_loader
+        self.bundle_name = bundle_name
+        
+        self.label = gtk.Label()
+        self.label.set_markup("<b>" + name +"</b>" + "\n" + "<i>" + description + "</i>")
+        self.add(self.label)
+        self.label.show()
+        self.show()
+
+        self.old_fg = self.label.get_style().fg[0]
+        self.old_bg = self.get_style().bg[0]
+
+        self.connect("enter-notify-event", self._onEnter)
+        self.connect("leave-notify-event", self._onLeave)
+        self.connect("button-press-event", self._onButtonPress)
+
+    def _onEnter(self, widget, event):
+        self.old_fg = self.label.get_style().fg[0]
+        self.old_bg = self.get_style().bg[0]
+
+        self.label.modify_fg(gtk.STATE_NORMAL, self.get_style().white)
+        self.modify_bg(gtk.STATE_NORMAL, self.get_style().dark[0])
+        return True
+
+    def _onLeave(self, widget, event):
+        self.label.modify_fg(gtk.STATE_NORMAL, self.old_fg)
+        self.modify_bg(gtk.STATE_NORMAL, self.old_bg)
+        return True
+
+    def _onButtonPress(self, widget, event):
+        self.extension_loader.load_bundle(self.bundle_name)
+        return True
+        
         
 
 class ExtensionLoader(gtk.Frame):
     def __init__(self, extension_container):
         gtk.Frame.__init__(self)
-        print str(self.get_parent())
-        self.set_shadow_type(gtk.SHADOW_OUT)
-        
-        global gconf_prefix
-        self.gconf_prefix = extension_container.get_preferences_key()
 
+        self.extension_container = extension_container
+
+        self.gconf_prefix = extension_container.get_preferences_key()
         print "Applet preferences located at " + self.gconf_prefix
         
         self.gconf_client = gconf.client_get_default()
 
         #set up interface
 
-        (
-            self.EXT_DESCRIPTION_COLUMN,
-            self.BUNDLE_NAME_COLUMN,
-            self.NUM_COLUMNS
-        ) = range(3)
-
-        extension_list_model = gtk.TreeStore(gobject.TYPE_STRING,
-                                             gobject.TYPE_STRING)
-
+        self.set_shadow_type(gtk.SHADOW_OUT)
+        
       
         if os.path.exists(extension_container_globals.extension_dir):
             print "Found extension directory"
@@ -117,7 +144,7 @@ class ExtensionLoader(gtk.Frame):
                 sys.path.remove(bundle_path)
                 #if we don't do this, __import__ will just create more references to the first thing we import
 
-        extension_list = []
+        self.label_box = gtk.VBox()
         
         for bundle in bundle_list:
                                  
@@ -128,61 +155,29 @@ class ExtensionLoader(gtk.Frame):
             try: ext_desc = bundle.description
             except: ext_desc = "No description found"
 
-            cell_string = "<b>" + ext_name + "</b>\n<i>" + ext_desc + "</i>"
-
-            itera = extension_list_model.append(None)
-            extension_list_model.set(itera,
-                                     self.EXT_DESCRIPTION_COLUMN, cell_string,
-                                     self.BUNDLE_NAME_COLUMN, bundle.bundle_file_name)
-
             
 
-        extension_tree_view = gtk.TreeView(extension_list_model)
+            applet_desc = AppletDescription(self, bundle.bundle_file_name, ext_name, ext_desc)
+            
+            self.label_box.pack_start(applet_desc)
+            
 
 
-        extension_tree_view.set_hover_selection(True)
-
-        extension_tree_view.connect("row-activated", self._on_item_clicked, extension_list_model, extension_container)
-        
-        renderer = gtk.CellRendererText()
-        renderer.set_property("xalign", 0.0)
-
-
-
-        column = gtk.TreeViewColumn("Double click item to load", renderer, markup=self.EXT_DESCRIPTION_COLUMN)
-        column.set_clickable(True)
-
-        extension_tree_view.append_column(column)
-
-        renderer = gtk.CellRendererText()
-        renderer.set_property("visible", False)
-
-        column = gtk.TreeViewColumn("Bundle Name", renderer, text=self.BUNDLE_NAME_COLUMN)
-        
-
-        self.add(extension_tree_view)
-
+        self.label_box.show_all()
+        self.add(self.label_box)
         self.show_all()
 
 
-    def _on_item_clicked(self, treeview, path, view_column, model, extension_container):
+    def load_bundle(self, bundle_file_name):
+        try:
+            self.extension_container.load_bundle(bundle_file_name)
+        except:
+            print "Could not load " + bundle_file_name
+            return 
 
-        itera = model.get_iter(path)
-
-        bundle_name = model.get_value(itera, self.BUNDLE_NAME_COLUMN)
-
+                
+        self.gconf_client.set_string(self.gconf_prefix + "/bundle_file", bundle_file_name)
         
-        #try:
-        extension_container.load_bundle(bundle_name)
-        #except:
-        #    print "Could not load " + bundle_name
-        #    return 
-        conf_value = gconf.Value(gconf.VALUE_STRING)
 
-        conf_value.set_string(bundle_name)
-
-        
-        self.gconf_client.set_string(self.gconf_prefix + "/bundle_file", bundle_name)
-        
         
 

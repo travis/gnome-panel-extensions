@@ -90,7 +90,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
             self.toggle.add(button_box)
             self.toggle.connect("toggled", self._onLoadDialogToggle)
 
-            self.big_box.add(self.toggle)
+            self.big_box.pack_start(self.toggle)
 
             self.load_window = load_extensions.AlignedWindow(self.toggle)
             self.load_window.set_modal(True)
@@ -99,6 +99,8 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
             self.load_window.add(self.loader)
             self.loader.show()
+
+
 
             if (__debug__):
                 print "Load window started"
@@ -171,8 +173,9 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         else:
             self.load_window.hide()
 
-    
 
+
+        
             
 
 gobject.type_register(ExtensionContainerApplet)
