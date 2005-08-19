@@ -1,6 +1,24 @@
 <?xml version="1.0" ?>
-<?xml-stylesheet type="text/css" href="styles/manifest.css" ?><gpem> 
-<name>Blog Applet</name>
-<description>Requires gnomeblog python package!!</description>
+<?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem bundlename="blog.gpe">
+	
+	 
 
-<file name="blog_applet.py" type="main"/><file name="GNOME_BlogApplet.xml" type="menu"/></gpem>
+	
+	<name>Blog Extension</name>
+	
+	
+
+	
+	<description>Blog Extension is awesome</description>
+	
+	
+
+
+	
+	<file name="blog_applet.py" type="main"/>
+	
+	
+	<file name="GNOME_BlogApplet.xml"/>
+	
+
+</gpem>

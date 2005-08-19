@@ -37,7 +37,7 @@ def xslt_output(dir_list):
     global MANIFEST_DIRECTORY
     global html_header
 
-    styledoc = libxml2.parseFile("extensions/styles/manifest.xslt")
+    styledoc = libxml2.parseFile("extensions/manifests/styles/manifest.xsl")
     style = libxslt.parseStylesheetDoc(styledoc)
     html_extension_list = html_header
     

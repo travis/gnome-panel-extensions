@@ -1,0 +1,104 @@
+#!/usr/bin/env python
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+import os
+import sys
+import traceback
+
+import shutil
+import zipfile
+
+
+class InvalidBundle(StandardError):
+    '''
+    Used to indicate a bundle is either non-existent or is missing
+    a necessary piece.
+    '''
+
+bundle_file_name = sys.argv[1]    
+
+#Check if bundle is valid
+try:
+    if zipfile.is_zipfile(bundle_file_name):
+        bundle_file = zipfile.ZipFile(bundle_file_name)
+            
+    else:
+        print "Sorry, ", bundle_file_name, "is not a gnome-extension-bundle file"
+        raise InvalidBundle, bundle_file_name+" is not a zip file."
+    
+    if not bundle_file.namelist().count("manifest.xml") == 1:
+        
+        # Since all bundles must contain manifest.xml
+        raise InvalidBundle, "Bundle does not contain manifest.xml"
+    
+except:
+        invalid_message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR,
+                                            buttons=gtk.BUTTONS_OK)
+        invalid_message.set_markup(bundle_file_name + ' is not a valid GPE bundle.')
+
+        (exc_type, exc_value, exc_tb) = sys.exc_info()
+
+        exception_list = traceback.format_exception_only(exc_type, exc_value)
+
+        exception = ""
+        for line in exception_list:
+            exception += line
+            
+        invalid_message.format_secondary_markup('Exception:\n'+ exception)
+                                               
+        invalid_message.run()
+        sys.exit()
+
+
+#Bundle file looks valid... but let's check with the user.
+
+security_warning = gtk.MessageDialog(flags=gtk.DIALOG_MODAL,
+                                     type=gtk.MESSAGE_WARNING,
+                                     buttons=gtk.BUTTONS_YES_NO)
+
+security_warning.set_markup('Are you sure you want to install ' + bundle_file_name + '?')
+
+security_warning.format_secondary_markup('The current implementation of GNOME panel extensions provides no security whatsoever! Continuing could do nearly anything including erase your hard drive or install a virus!')
+
+security_warning.show()
+
+response = security_warning.run()
+
+if response == gtk.RESPONSE_YES:
+
+    try:
+        extension_dir = os.path.expandvars("$HOME/.panelextensions")
+
+        if not os.path.isdir(extension_dir):
+            os.mkdir(extension_dir)
+
+        shutil.copy2(bundle_file_name,extension_dir)
+
+        
+        
+        success_message = gtk.MessageDialog(buttons=gtk.BUTTONS_OK)
+        success_message.set_markup(bundle_file_name + ' successfully installed!')
+        success_message.run()
+
+    except:
+        failed_message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR,
+                                           buttons=gtk.BUTTONS_OK)
+        failed_message.set_markup('Could not install ' + bundle_file_name + '.')
+
+        (exc_type, exc_value, exc_tb) = sys.exc_info()
+
+        exception_list = traceback.format_exception_only(exc_type, exc_value)
+
+        exception = ""
+        for line in exception_list:
+            exception += line
+            
+        failed_message.format_secondary_markup('Exception:\n'+ exception)
+                                               
+        failed_message.run()
+
+
+    
+

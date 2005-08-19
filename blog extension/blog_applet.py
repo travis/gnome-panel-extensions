@@ -64,18 +64,19 @@ class BloggerApplet(panel_extension.PanelExtension):
         self.poster_window.set_modal(True)
         accel_group = gtk.AccelGroup()
         self.poster_window.add_accel_group(accel_group)
-        self.prefs_key = self.get_preferences_key()
+        prefs_prefix = self.get_preferences_prefix()
+        self.prefs_key = prefs_prefix + "/blog_poster_extension"
         print "Applet prefs located at %s" % (self.prefs_key)
         self.poster = blog_poster.BlogPoster(prefs_key=self.prefs_key, on_entry_posted=self._onEntryPosted)
         self.poster_window.add(self.poster)
         self.poster.show()
 
-        client = gconf.client_get_default()
-        value = client.get_bool(self.prefs_key + "/initialized")
+        self.client = gconf.client_get_default()
+        value = self.client.get_bool(self.prefs_key + "/initialized")
         if value == None or value == False:
 #            self.poster._showPrefDialog()
 #            self._showPrefDialog()
-            client.set_bool(self.prefs_key + "/initialized", True)
+            self.client.set_bool(self.prefs_key + "/initialized", True)
 
 #        self._createToolTip(client)
         

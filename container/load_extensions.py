@@ -1,19 +1,19 @@
 import os
 import sys
+
+if (__debug__):
+    import traceback
+    
 import dircache #could use os.listdir, but this is nicer
 import gtk
-import gtk.glade
 import gobject
-import gconf
+
 import extension_container_globals
+import extension_bundle
 
 import gettext
 _ = gettext.gettext
 
-
-
-gconf_prefix = None
-import gtk
 
 class AlignedWindow(gtk.Window):
     '''
@@ -63,121 +63,164 @@ class AlignedWindow(gtk.Window):
 
 
 class AppletDescription(gtk.EventBox):
-    def __init__(self, extension_loader, bundle_name, name="No name", description="No Description"):
+    def __init__(self, extension_loader, bundle, bundle_name):
         gtk.EventBox.__init__(self)
         self.extension_loader = extension_loader
         self.bundle_name = bundle_name
+        self.bundle = bundle
+        if (__debug__):
+            print bundle_name
+            print str(bundle)
+
+        self.set_above_child(True)
+        
+        self.hbox = gtk.HBox()
+        self.hbox.set_size_request(300,-1)
+        name = bundle.name
+        description = bundle.description
         
         self.label = gtk.Label()
         self.label.set_markup("<b>" + name +"</b>" + "\n" + "<i>" + description + "</i>")
-        self.add(self.label)
-        self.label.show()
+        self.label.set_alignment(0,0.5)
+
+        
+
+        #set up live preview
+        self.live_preview = self.bundle.get_extension()
+        self.live_preview._register_bundle(self.bundle)
+        self.live_preview._set_live_preview(True)
+
+
+
+        preview_align = gtk.Alignment(0.5,0.5,0,0)
+
+        preview_align.add(self.live_preview)
+
+        preview_align.set_size_request(100, 63)
+
+        self.hbox.pack_start(preview_align, expand=False, fill=False)
+
+        try:
+            self.live_preview.__extension_init__()
+        except:
+            print "Could not create live preview"
+            traceback.print_exc()
+            
+        
+
+        self.hbox.pack_start(self.label, expand=False, fill=False)
+        
+        self.add(self.hbox)
+        self.hbox.show_all()
+
+        self.white = self.get_style().white
+        self.tint = self.get_style().black
+
+        self.modify_bg(gtk.STATE_NORMAL, self.white)
+        
         self.show()
 
         self.old_fg = self.label.get_style().fg[0]
-        self.old_bg = self.get_style().bg[0]
 
         self.connect("enter-notify-event", self._onEnter)
         self.connect("leave-notify-event", self._onLeave)
         self.connect("button-press-event", self._onButtonPress)
 
     def _onEnter(self, widget, event):
-        self.old_fg = self.label.get_style().fg[0]
-        self.old_bg = self.get_style().bg[0]
-
-        self.label.modify_fg(gtk.STATE_NORMAL, self.get_style().white)
-        self.modify_bg(gtk.STATE_NORMAL, self.get_style().dark[0])
+        
+        self.label.modify_fg(gtk.STATE_NORMAL, self.white)
+        self.modify_bg(gtk.STATE_NORMAL, self.tint)
         return True
 
     def _onLeave(self, widget, event):
         self.label.modify_fg(gtk.STATE_NORMAL, self.old_fg)
-        self.modify_bg(gtk.STATE_NORMAL, self.old_bg)
+        self.modify_bg(gtk.STATE_NORMAL, self.white)
         return True
 
     def _onButtonPress(self, widget, event):
         self.extension_loader.load_bundle(self.bundle_name)
         return True
-        
+
         
 
-class ExtensionLoader(gtk.Frame):
+class ExtensionLoaderDialogVBox(gtk.Dialog):        
     def __init__(self, extension_container):
-        gtk.Frame.__init__(self)
+        gtk.Dialog.__init__(self,
+                            title="Choose Extension",
+                            parent=None,
+                            buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_DELETE_EVENT))
+        self.connect('response', self._onResponse)
+        self.connect('destroy', self._cleanup)
 
         self.extension_container = extension_container
 
-        self.gconf_prefix = extension_container.get_preferences_key()
-        print "Applet preferences located at " + self.gconf_prefix
         
-        self.gconf_client = gconf.client_get_default()
 
-        #set up interface
-
-        self.set_shadow_type(gtk.SHADOW_OUT)
-        
-      
         if os.path.exists(extension_container_globals.extension_dir):
             print "Found extension directory"
         else:
             os.mkdir(extension_container_globals.extension_dir, 0777)
             print "Created extension directory" + extension_container_globals.extension_dir
 
-        sys.path.insert(0, extension_container_globals.extension_dir)
+        os.chdir(extension_container_globals.extension_dir)
+        
         extension_dir_list = dircache.listdir(extension_container_globals.extension_dir)
 
-        bundle_list = []
+        self.desc_box = gtk.VBox()
 
-        
+        self.bundle_list = []
+        self.description_list = []
         for bundle_name in extension_dir_list:
             if bundle_name.endswith(".gpe"):
+                #bad sanity test, but more will occur in Bundle.__init__():
 
-                bundle_path = os.path.join(extension_container_globals.extension_dir, bundle_name)
-
-                sys.path.insert(0, bundle_path)
                 try:
-                    bundle_list.append(__import__("__bundle_init__"))
-                    del sys.modules["__bundle_init__"]
+                    bundle = extension_bundle.Bundle(bundle_name)
+                    self.bundle_list.append(bundle)
+                    applet_desc = AppletDescription(self, bundle, bundle_name)
+                    
+                    self.description_list.append(applet_desc)
+                    
+                    self.desc_box.pack_start(applet_desc, expand=False, fill=False)
 
                 except:
-                    print "Could not load " + bundle_name
-                    
-                sys.path.remove(bundle_path)
-                #if we don't do this, __import__ will just create more references to the first thing we import
+                    print "Could not add " + bundle_name + " to list"
+                    if (__debug__):
+                        print "Exception:"
+                        traceback.print_exc()
 
-        self.label_box = gtk.VBox()
-        
-        for bundle in bundle_list:
-                                 
-      
-            try: ext_name = bundle.name
-            except: ext_name = "No name found"
+        scroller = gtk.ScrolledWindow()
+        scroller.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        scroller.set_size_request(-1, 300)
 
-            try: ext_desc = bundle.description
-            except: ext_desc = "No description found"
+        scroller.add_with_viewport(self.desc_box)
+                
+        self.vbox.pack_start(scroller)
 
-            
+        self.vbox.show_all()
 
-            applet_desc = AppletDescription(self, bundle.bundle_file_name, ext_name, ext_desc)
-            
-            self.label_box.pack_start(applet_desc)
-            
-
-
-        self.label_box.show_all()
-        self.add(self.label_box)
         self.show_all()
 
+    def _onResponse(self, dialog, response_id):
+        if response_id == gtk.RESPONSE_DELETE_EVENT:
+
+            self.destroy()
+
+    def _cleanup(self, dialog):
+        
+        self.extension_container.load_dialog_closed()
 
     def load_bundle(self, bundle_file_name):
         try:
             self.extension_container.load_bundle(bundle_file_name)
         except:
             print "Could not load " + bundle_file_name
-            return 
+            raise
 
-                
-        self.gconf_client.set_string(self.gconf_prefix + "/bundle_file", bundle_file_name)
-        
 
-        
+
+
+
+
+
 

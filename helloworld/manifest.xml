@@ -1,8 +1,3 @@
 <?xml version="1.0" ?>
-<?xml-stylesheet type="text/css" href="styles/manifest.css" ?><gpem> 
-<name>Hello World</name>
-
-<description>Hello World is a demonstration!</description>
-
-
-<file name="hello.py" type="main"/><file name="hello.xml" type="menu"/></gpem>
+<?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem> 
+<file name="hello.py" type="main"/></gpem>

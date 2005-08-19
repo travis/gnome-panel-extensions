@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import pygtk
 pygtk.require('2.0')
 
@@ -6,10 +5,6 @@ import os
 import sys
 import gtk
 import gobject
-import zipfile
-
-import gettext
-_ = gettext.gettext
 
 class NoAppletError(Exception):
 	def __init__(self, *args):
@@ -23,6 +18,8 @@ class PanelExtension(gtk.EventBox):
 	def __init__(self, bundle=None):
 		self.__gobject_init__()
 		self.applet = None
+		self.bundle = None
+		self.live_preview_mode = False
 
 
 	def __extension_init__(self):
@@ -30,26 +27,32 @@ class PanelExtension(gtk.EventBox):
 
 
 	def get_bundle(self):
-		if self.applet:
+		if self.bundle:
+			return self.bundle
+		elif self.applet:
 			return self.applet.get_loaded_bundle()
 		else:
 			raise NoAppletError, "No applet registered, cannot get bundle"
 
-	def get_preferences_key(self):
-		if self.applet:
-			return self.applet.get_preferences_key()
-		else:
-			raise NoAppletError, "No applet file registered, can get preferences ket"
+ 	def get_preferences_prefix(self):
+		return "/apps/panel/extensions"
+				
 			
 
 	def setup_extension_menu(self, xml, verbs):
-		if self.applet:
+		if self.live_preview_mode:
+			pass
+		
+		elif self.applet:
 			self.applet.setup_menu(xml, verbs, None)
 		else:
 			raise NoAppletError, "No applet file registered, can not create context menu"
 		
 	def setup_extension_menu_from_file(self, file, verbs):
-		if self.applet:
+		if self.live_preview_mode:
+			pass
+
+		elif self.applet:
 			old_wd = os.getcwd()
 			os.chdir("/tmp/")
 			#temporarily expand the xml file
@@ -70,10 +73,14 @@ class PanelExtension(gtk.EventBox):
 		else:
 			raise NoAppletError, "No container applet registered, can not create context menu"
 
+	def _set_live_preview(self, value):
+		self.live_preview_mode = value
 
 	def _register_container_applet(self, applet):
 		self.applet = applet
 
+	def _register_bundle(self, bundle):
+		self.bundle = bundle
 		
 
 gobject.type_register(PanelExtension)

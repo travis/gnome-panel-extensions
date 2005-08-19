@@ -31,7 +31,7 @@ class HelloApplet(panel_extension.PanelExtension):
         self.setup_extension_menu_from_file (menu_file,
                                             [("Sweet", self._sweet),])
 
-        self.label = gtk.Label("Hello, World!")
+        self.label = gtk.Label("Hello, World! This is a longer fuckin label!")
 
         self.add(self.label)
 
