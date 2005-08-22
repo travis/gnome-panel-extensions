@@ -23,7 +23,7 @@ bundle_file_name = sys.argv[1]
 try:
     if zipfile.is_zipfile(bundle_file_name):
         bundle_file = zipfile.ZipFile(bundle_file_name)
-            
+
     else:
         print "Sorry, ", bundle_file_name, "is not a gnome-extension-bundle file"
         raise InvalidBundle, bundle_file_name+" is not a zip file."
@@ -34,22 +34,23 @@ try:
         raise InvalidBundle, "Bundle does not contain manifest.xml"
     
 except:
-        invalid_message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR,
+    traceback.print_exc()
+    invalid_message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR,
                                             buttons=gtk.BUTTONS_OK)
-        invalid_message.set_markup(bundle_file_name + ' is not a valid GPE bundle.')
+    invalid_message.set_markup(bundle_file_name + ' is not a valid GPE bundle.')
 
-        (exc_type, exc_value, exc_tb) = sys.exc_info()
-
-        exception_list = traceback.format_exception_only(exc_type, exc_value)
-
-        exception = ""
-        for line in exception_list:
-            exception += line
-            
-        invalid_message.format_secondary_markup('Exception:\n'+ exception)
-                                               
-        invalid_message.run()
-        sys.exit()
+    (exc_type, exc_value, exc_tb) = sys.exc_info()
+    
+    exception_list = traceback.format_exception_only(exc_type, exc_value)
+    
+    exception = ""
+    for line in exception_list:
+        exception += line
+        
+    invalid_message.format_secondary_markup('Exception:\n'+ exception)
+        
+    invalid_message.run()
+    sys.exit()
 
 
 #Bundle file looks valid... but let's check with the user.

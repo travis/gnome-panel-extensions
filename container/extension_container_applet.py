@@ -65,15 +65,12 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
                 bundleFileName = None
         
             
-        if not bundleFileName == None:
-                
-            try: 
-                self.bundle = self.load_bundle(bundleFileName)
-            except:
-                print "Could not load " + bundleFileName
-                
 
-        else:
+                
+        try:
+            self.bundle = self.load_bundle(bundleFileName)
+        except:
+        
             #Build loader button
             
             self.bundle = None
@@ -116,7 +113,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
     
     
-    def load_bundle(self, bundleFileName=''):
+    def load_bundle(self, bundleFileName):
         """
         Loads up bundle and returns initialized extension object.
 
@@ -129,6 +126,9 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
         os.chdir(extension_container_globals.extension_dir)
 
+        if bundleFileName == None:
+            raise StandardError
+        
         bundle = None
         
         widget = self.get_children()
@@ -142,20 +142,22 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         try: bundle = extension_bundle.Bundle(bundleFileName)
         except:
             print "Could not create bundle"
+            traceback.print_exc()
+            raise
 
-        if bundle:
-            self.loaded_bundle = bundle
+        
+        self.loaded_bundle = bundle
             
-            self.extension = bundle.get_extension()
+        self.extension = bundle.get_extension()
 
-            self.client.set_string(self.prefs_key + "/bundle_file", bundleFileName)
+        self.client.set_string(self.prefs_key + "/bundle_file", bundleFileName)
 
 
-            self.extension._register_container_applet(self)
-            self.add(self.extension)
-            self.show_all()
+        self.extension._register_container_applet(self)
+        self.add(self.extension)
+        self.show_all()
 
-            self.extension.__extension_init__() #run the applet code
+        self.extension.__extension_init__() #run the applet code
             
 
 

@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+from mod_python import apache
 import os
 import cgi
-MANIFEST_DIRECTORY = "extensions/manifests/"
+import shelve
+my_globals = apache.import_module('gnome_panel_extensions_org_globals')
 
-html_header = '''<?xml version="1.0"?>
+def html_head():
+    return '''<?xml version="1.0"?>
 
 <!DOCTYPE html 
 	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -24,52 +27,24 @@ html_header = '''<?xml version="1.0"?>
 <body>
 '''
 
-def xslt_output(dir_list):
-    '''
-    Return html by applying xslt stylesheet.
+
+def return_html_list(req):
+    return_page = html_head()
+    base_dir = os.path.split(os.path.split(req.filename)[0])[0]
+    os.chdir(base_dir)
     
-    For use with xslt to produce actual html output since XLink is not
-    supported by browsers. This is actually much more versatile but will
-    probably be a little slower because of the extra processing.
-    '''
-    import libxslt
-    import libxml2
-    global MANIFEST_DIRECTORY
-    global html_header
+    extension_database = shelve.open("extensions/extension_data")
 
-    styledoc = libxml2.parseFile("extensions/manifests/styles/manifest.xsl")
-    style = libxslt.parseStylesheetDoc(styledoc)
-    html_extension_list = html_header
-    
-    for file_name in dir_list:
-        print MANIFEST_DIRECTORY + file_name
-        if os.path.isfile(MANIFEST_DIRECTORY + file_name):
+    extension_list = extension_database.values()
 
-            doc = libxml2.parseFile(MANIFEST_DIRECTORY + file_name)
-            result = style.applyStylesheet(doc, None)
-            html_extension_list += style.saveResultToString(result)
-            
-    html_extension_list += '''
-</body>
-</html>'''
+    for extension in extension_list:
+        return_page += str(extension.name) + '<br/>'
+        return_page += str(extension.description) + '<br/>'
+        return_page += '<a href="../../extensions/bundles/%s">Upload</a><br/>'%extension.bundlename
+        return_page += '<a href="../upload.py/delete?bundlename=%s">Delete</a><br/>'%extension.bundlename
 
-
-
-            
-    return html_extension_list
-
-def return_html_list():
-    global MANIFEST_DIRECTORY
-    os.chdir("/home/travis/development/gnome-panel-extensions/panelextensions.gnome.org/")
-    html_extension_list = "No extensions found"
-
-    dir_list = os.listdir(MANIFEST_DIRECTORY)
-    print str(dir_list)
-    if dir_list:
-        html_extension_list = xslt_output(dir_list)
-
-    return html_extension_list
+    return return_page
 
 
     
-print return_html_list()
+
