@@ -1,0 +1,157 @@
+#!/usr/bin/env python
+print "Content-type: text/html"
+print
+import cgitb; cgitb.enable()
+import cgi
+import sys, os, shutil
+import zipfile
+import gnome_panel_extensions_org_globals as my_globals
+import shelve
+
+print '''<?xml version="1.0"?>
+<!DOCTYPE html 
+	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <title>Upload</title>
+ <link rel="stylesheet" type="text/css" href="../styles/global.css"/>
+
+</head>
+<body>
+%s
+</div>
+%s
+</div>
+<div id="main">
+'''%(my_globals.sidebar(),
+     my_globals.titlebar())
+
+
+
+
+
+
+
+
+
+form = cgi.FieldStorage()
+
+bundle = form['bundle']
+uploadtype = form.getfirst('uploadtype')
+category = form.getfirst('category')
+if form.has_key('icon'):
+    icon = form['icon']
+else:
+    icon = None
+
+
+temp_bundle_name = os.path.join("../extensions/tmp",bundle.filename)
+
+temp_file = file(temp_bundle_name, 'w')
+
+shutil.copyfileobj(bundle.file, temp_file)
+
+temp_file.close()
+
+try:
+    
+    if not zipfile.is_zipfile(temp_bundle_name):
+        print "Sorry, this does not appear to be a zipfile!\n"
+        
+        sys.exit()
+
+    if not os.path.isdir("../extensions/bundles"):
+        os.mkdir("../extensions/bundles")
+
+    if 0: # fill in authentication stuff here, for the moment anyone can upload
+        #print 'You must be logged in to upload'
+        #session.invalidate()
+        
+        sys.exit()
+    else:
+        try:
+            extension_database = shelve.open("../extensions/extension_data")
+            user = my_globals.User() # fix when auth is implemented
+        
+            if uploadtype == 'update':
+                try: extension = extension_database[bundle.filename]
+                except:
+                    print 'Bundle '+bundle.filename+' does not exist.'
+                    
+                    sys.exit()
+
+
+                
+                user.username = extension.username #REMOVE WHEN AUTH IMPLEMENTED!
+
+            
+                if extension.username == user.username:
+                    try:
+                        extension.load(temp_bundle_name)
+                        extension.set_icon(icon)                    
+                    except:
+                        print 'Could not update '+bundle.filename+':<br/>'
+                        import traceback
+                        print traceback.format_exc()
+                       
+                        sys.exit()
+                    
+                    extension.category = category    
+                    extension_database[bundle.filename] = extension
+                    shutil.copyfile(temp_bundle_name, os.path.join("../extensions/bundles/",bundle.filename))
+
+
+                    print bundle.filename + ' updated successfully!'
+                    
+                    sys.exit() 
+                else:
+                    print 'You do not have permission to update '+bundle.filename+'.'
+                    
+                    sys.exit()
+                
+
+            elif uploadtype == 'new':
+                if not extension_database.has_key(bundle.filename):
+                    extension = my_globals.Extension()
+                    extension.username = "nouser"#session['userdata'].username
+                    extension.bundlename = bundle.filename
+                    extension.load(temp_bundle_name)
+                    extension.set_icon(icon)                    
+                    extension.category = category
+                    extension_database[bundle.filename] = extension
+
+                    shutil.copyfile(temp_bundle_name, os.path.join("../extensions/bundles/",bundle.filename))
+
+                    print bundle.filename + " successfully uploaded!"
+                    
+                    sys.exit()
+                else:
+                    print bundle.filename + ' already exists, please rename your bundle.'
+                    print '</body>\n</html>\n'
+                    
+                    sys.exit()
+            else:
+                print 'Unknown upload type!'
+               
+
+                sys.exit()
+        finally: extension_database.close()
+finally:
+    os.remove(temp_bundle_name)
+    print '''
+</div>
+</body>
+</html>
+'''
+
+            
+
+
+
+    
+    
+
+    
