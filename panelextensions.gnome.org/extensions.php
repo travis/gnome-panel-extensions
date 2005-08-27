@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-
 <!DOCTYPE html 
 	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
@@ -16,24 +14,21 @@
 </head>
 
 <body>
+<?php 
+include("titlebar.html");
+?>
+</div>
+<?php
 
- <div id="titlebar">
-  <span id="pagetitle">
-  GNOME panel extensions
-  <span>
- </div>
-
- <div id="sidebar">
-  <script language="JavaScript"
-     src="scripts/navbar.js" name="navBarScript">
-  </script>
- </div>
+include("sidebar.html");
+?>
+</div>
 
  <div id="main">
   <iframe
      id="extensionlist"
      name="ExtensionList"
-     src="scripts/extension_list.py/return_html_list"
+     src="cgi-bin/extension_list.pyg"
      scrolling="yes">
 
 

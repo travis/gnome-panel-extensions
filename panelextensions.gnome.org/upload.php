@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-
 <!DOCTYPE html 
 	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
@@ -13,33 +11,48 @@
 </head>
 
 <body>
+<?php
+include("titlebar.html");
+?>
+</div>
+<?php
+include("sidebar.html");
+?>
+</div>
+
+<div id="main">
+<form method="POST" enctype="multipart/form-data" action="cgi-bin/upload.pyg">
 
 
-<form method="POST" enctype="multipart/form-data" action="scripts/upload.py/upload">
-
-Select bundle file:
+<p>
+Select bundle file:<br/>
     <input type="file" name="bundle" size="32" maxlength="80"/>
-    
-    <br/>
+</p>
 
+    <p>
+Category:<br/>
+    <select name="category">
+
+      <option>Network</option>
+      <option>Sound & Video</option>
+      <option>System</option>
+      <option>Utility</option>
+      <option>World Wide Web</option>
+    </select>
+    </p>
+
+<p>    
+Select icon (Leave blank to use icon from bundle):<br/>
+<input type="file" name="icon" size="32" maxlength="80">
+</p>
     <p>
        <input type="radio" name="uploadtype" value="new"/> New
        <input type="radio" name="uploadtype" value="update"/> Update
     </p>
-    <p>
-    Category:
-    <select name="category">
-      <option>Information</option>
-      <option>Network</option>
-      <option>Sound & Video</option>
-      <option>System</option>
-
-    </select>
-    </p>
-
+    
     <input type="submit" value="Upload"/>
 </form>
-
+</div>
 
 </body>
 

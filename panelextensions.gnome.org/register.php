@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-
 <!DOCTYPE html 
 	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
@@ -169,7 +167,12 @@
 </head>
 
 <body>
+<?php
+include("titlebar.html");
+include("sidebar.html");
+?>
 
+<div id="main">
 <div id="submitError">
 There was a problem with the information you entered. Please see below
 for details:
@@ -285,7 +288,7 @@ for details:
     <input id="submitButton" type="submit" value="Register"/>
     
 </form>
-
+</div>
 
 </body>
 
