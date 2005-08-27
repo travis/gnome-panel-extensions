@@ -1,0 +1,4 @@
+Installation:
+
+1. Run install.py as root
+2. Restart gnome-panel (force quit works just fine)

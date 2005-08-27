@@ -1,0 +1,17 @@
+GNOME panel extensions v0.0.1
+August 27th, 2005
+Travis Vachon
+
+Currently, the system works like this:
+
+1. Developer writes extension in Python and bundles it up using included build utility, gebb. See below for notes on gebb.
+
+2. User acquires bundle file (bundlename.gpe) and puts it in ~/.panelextensions
+
+3. User loads extension container applet through gnome-panel Add to panel... dialog.
+
+4. User clicks on "Load Extension" button and double clicks on the extension he wishes to load.
+
+5. Extension loads. Sweet.
+
+See included tutorial and files for more information on creating bundles.
