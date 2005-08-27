@@ -24,6 +24,7 @@ class HelloApplet(panel_extension.PanelExtension):
 
     def __extension_init__(self):
 
+
         self.bundle = self.get_bundle()
 
         menu_file = self.bundle.open("hello.xml")
@@ -31,7 +32,7 @@ class HelloApplet(panel_extension.PanelExtension):
         self.setup_extension_menu_from_file (menu_file,
                                             [("Sweet", self._sweet),])
 
-        self.label = gtk.Label("Hello, World! This is a longer fuckin label!")
+        self.label = gtk.Label("Hello, World!")
 
         self.add(self.label)
 

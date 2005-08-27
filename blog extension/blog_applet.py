@@ -6,17 +6,16 @@ import gtk
 import gobject
 import gnome
 import gnome.ui
-import gnomeapplet
 import gconf
 import panel_extension
 import string  # maybe someone can do this trick without string?
 
 from gettext import gettext as _, bindtextdomain, textdomain
 
-from gnomeblog import blog_poster
-from gnomeblog import aligned_window
-from gnomeblog import blogger_prefs
-from gnomeblog import gnome_blog_globals
+import blog_poster
+import aligned_window
+import blogger_prefs
+import gnome_blog_globals
 
 bindtextdomain('gnome-blog', gnome_blog_globals.localedir)
 textdomain('gnome-blog')
@@ -64,8 +63,7 @@ class BloggerApplet(panel_extension.PanelExtension):
         self.poster_window.set_modal(True)
         accel_group = gtk.AccelGroup()
         self.poster_window.add_accel_group(accel_group)
-        prefs_prefix = self.get_preferences_prefix()
-        self.prefs_key = prefs_prefix + "/blog_poster_extension"
+        self.prefs_key = self.get_preferences_key("blog_poster_extension")
         print "Applet prefs located at %s" % (self.prefs_key)
         self.poster = blog_poster.BlogPoster(prefs_key=self.prefs_key, on_entry_posted=self._onEntryPosted)
         self.poster_window.add(self.poster)
@@ -74,11 +72,11 @@ class BloggerApplet(panel_extension.PanelExtension):
         self.client = gconf.client_get_default()
         value = self.client.get_bool(self.prefs_key + "/initialized")
         if value == None or value == False:
-#            self.poster._showPrefDialog()
-#            self._showPrefDialog()
+            self.poster._showPrefDialog()
+            self._showPrefDialog()
             self.client.set_bool(self.prefs_key + "/initialized", True)
 
-#        self._createToolTip(client)
+        self._createToolTip(client)
         
         return True
     

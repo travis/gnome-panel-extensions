@@ -30,6 +30,18 @@ content: 'Open Issue:';
 font-weight: bold;
 
 }
+p.note{
+position: relative;
+left: 2em;
+font-size: 0.8em;
+width: 80%;
+}
+
+p.note:before{
+content: 'Note:';
+font-weight: bold;
+
+}
 
 p.tech{
 position: relative;

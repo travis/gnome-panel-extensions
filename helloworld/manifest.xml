@@ -1,3 +1,3 @@
 <?xml version="1.0" ?>
 <?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem> 
-<file name="hello.py" type="main"/><file name="hello.xml"/><name>Hell World </name><description>Hello world is a test </description></gpem>
+<file name="hello.py" type="main"/><file name="hello.xml"/><name>Hello World </name><description>This is an update test </description><file name="hello.png" type="icon"/></gpem>

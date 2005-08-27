@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+'''
+Extension Container Applet
+(c) 2005 travis f vachon
+
+The Extension Container applet is designed to load and run GNOME
+Panel Extensions. See http://www.gnome.org/~tvachon for more
+details on these.
+'''
 import pygtk
 pygtk.require('2.0')
 
@@ -11,9 +19,9 @@ import gobject
 import gconf
 import gnomeapplet
 
-import load_extensions
-import extension_container_globals
-import extension_bundle
+from panel_extension import load_extensions
+from panel_extension import extension_container_globals
+from panel_extension import extension_bundle
 
 import gettext
 _ = gettext.gettext
@@ -49,7 +57,9 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
         self.prefs_key = self.get_preferences_key()
         self.client = gconf.client_get_default()
-        
+
+        self.ui_manager = gtk.UIManager()
+
         print "Container applet preferences located at %s" % self.prefs_key
 
         self.connect("destroy", self._cleanup)
@@ -79,13 +89,12 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
             
             self.add(load_button)
 
-            popup = self.get_popup_component()
-
-            print str(popup)
-            print dir(popup)
+            #self.ui_manager.add_ui_from_string()
 
             self.show_all()
-        
+
+            print self.get_control()
+                    
         return True
 
 
@@ -94,7 +103,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         
 
         button_box = gtk.HBox()
-        button_box.pack_start(gtk.Label(_("Choose Extensions")))
+        button_box.pack_start(gtk.Label(_("Choose Extension")))
 
 
         self.toggle.add(button_box)
@@ -148,7 +157,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
         
         self.loaded_bundle = bundle
             
-        self.extension = bundle.get_extension()
+        self.extension = bundle._get_extension()
 
         self.client.set_string(self.prefs_key + "/bundle_file", bundleFileName)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from mod_python import apache
+from mod_python import apache, Session
 import os
 import cgi
 import shelve
@@ -17,7 +17,7 @@ def html_head():
 <head>
  <title>panelextensions.gnome.org</title>
  <link rel="stylesheet" type="text/css" href="../../styles/global.css"/>
- <link rel="stylesheet" type="text/css" href="../../extensions/styles/extensions.css"/>
+ <link rel="stylesheet" type="text/css" href="../../styles/extensionlist.css"/>
 
 
 
@@ -37,12 +37,33 @@ def return_html_list(req):
 
     extension_list = extension_database.values()
 
-    for extension in extension_list:
-        return_page += str(extension.name) + '<br/>'
-        return_page += str(extension.description) + '<br/>'
-        return_page += '<a href="../../extensions/bundles/%s">Upload</a><br/>'%extension.bundlename
-        return_page += '<a href="../upload.py/delete?bundlename=%s">Delete</a><br/>'%extension.bundlename
+    session = Session.Session(req)
+    if session.is_new():
+        session.invalidate()
+        username=None
+    else:
+        username = session['userdata'].username
 
+    return_page += 'New Extensions:<br/>'
+
+    for extension in extension_list:
+        return_page += '''
+        <div class="extensiondescription">
+        <img class="icon" href="" />
+        <span class="name">%s</span>
+        <span class="desc">%s</span>
+        <span class="linkbox"><a href="../../extensions/bundles/%s">Download</a>
+        '''%(str(extension.name),str(extension.description),extension.bundlename)
+
+        if username == extension.username:
+            return_page += '<a href="../upload.py/delete?bundlename=%s">Delete</a><br/>'%extension.bundlename
+
+
+        return_page +="</span>\n</div>"
+
+    return_page +="</body></html>"
+        
+        
     return return_page
 
 

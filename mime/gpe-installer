@@ -75,12 +75,13 @@ if response == gtk.RESPONSE_YES:
         if not os.path.isdir(extension_dir):
             os.mkdir(extension_dir)
 
-        shutil.copy2(bundle_file_name,extension_dir)
+        shutil.copy(bundle_file_name,os.path.join(extension_dir,os.path.split(bundle_file_name)[1]))
+        os.remove(bundle_file_name)
 
         
         
         success_message = gtk.MessageDialog(buttons=gtk.BUTTONS_OK)
-        success_message.set_markup(bundle_file_name + ' successfully installed!')
+        success_message.set_markup(os.path.split(bundle_file_name)[1] + ' successfully installed!')
         success_message.run()
 
     except:

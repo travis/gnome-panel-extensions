@@ -8,8 +8,67 @@
 
 <head>
  <title>User Installable gnome-panel Extensions</title>
- <link rel="stylesheet" type="text/css" href="style.css"/>
 
+<style type="text/css">
+
+
+div#header { 
+
+background: white;
+text-align: center;
+z-index: 0;
+
+}
+div#main { 
+
+background: white;
+text-align: left;
+z-index: 0;
+
+}
+
+p.open{
+position: relative;
+left: 2em;
+font-size: 0.8em;
+width: 80%;
+}
+
+p.open:before{
+content: 'Open Issue:';
+font-weight: bold;
+
+}
+p.note{
+position: relative;
+left: 2em;
+font-size: 0.8em;
+width: 80%;
+}
+
+p.note:before{
+content: 'Note:';
+font-weight: bold;
+
+}
+
+p.tech{
+position: relative;
+left: 2em;
+font-size: 0.8em;
+width: 80%;
+
+}
+p.tech:before{
+content: 'Technical Note:';
+font-weight: bold;
+}
+table#flowcharts {
+text-align: center;
+border-spacing: 2em;
+}
+
+</style>
 </head>
 
 <body>
@@ -20,15 +79,10 @@
 <h2>Functional Specification<h2>
 <h3>Travis Vachon</h3>
 <h3>July 3rd, 2005</h3>
+<h4>Updated August 23rd, 2005</h4>
 
-<p>
-<em>Note:</em> The term "extension" may be replaced by 
-something that sounds cooler. That would be nice. If anyone 
-has any suggestions I'd be glad to hear them!
-
-</p>
-<p>
-<em>Note:</em> This specification is not, by any means,
+<p class="note">
+This specification is not, by any means,
 complete. Comments and revisions would be greatly appreciated. Thanks!
 </p>
 
@@ -79,12 +133,12 @@ Gardener's website is absolutely atrocious.
 <p>
 Norm decides that his dream of easy PH monitoring will remain
 just that. The next time he updates his operating system,
-however, he notices a new feature in the GNOME panel "Add new applets"
+however, he notices a new feature in the GNOME panel "Add to panel..."
 dialog. 
 </p>
-<img alt="Add new applets dialog" src="addtopanel.png"/>
+<img alt="Picture of add to panel dialog." src="addtopanel.png"/>
 <p>
-Norm clicks on "Get new applets" and is directed to a web
+Norm clicks on "Get Extensions" and is directed to a web
 page with a list of GNOME panel applets including a new version
 of The Gardener. Norm clicks on a link for a new page with a 
 detailed description of The Gardener and an "install" link.
@@ -93,18 +147,23 @@ confirming that he wants to install The Gardener. Norm hits
 "yes", and immediately sees "The Gardener" pop up on one of the
 panels.
 </p>
+<p class="note">
+The first release of gnome panel extensions will function slightly 
+differently. Instead of being integrated into the current "Add to panel..."
+dialog, extensions will be run by a special old-style applet called the 
+extension container. Thus, users will add the extension container to the panel
+and then select an extension via the provided interface.
+</p>
 <p class="tech">
 In later versions, it would be nice if the new applet appeared
 on the panel that the user clicked on to get the context menu.
-For the first version, however, it will probably just appear 
-on the first (root) panel.
 </p>
 <h4>Scenario 2</h4>
 <p>
 Toby, a power user who switched to Linux several years ago, 
 has decided he'd like to get into developing for GNOME. As
 a first project, Toby decides to write a simple gnome-panel
-applet. He finds a good PyGTK tutorial, as well as some
+applet in Python. He finds a good PyGTK tutorial, as well as some
 specifics on writing gnome-panel applets. After a week of
 reading and coding, Tony has a functioning applet that allows
 users to interface with GardenPro brand PH monitors and display
@@ -126,7 +185,7 @@ a result, development on The Gardener essentially ceases.
 A couple months later Toby reads about a new system for user
 installable gnome panel extensions. Toby reads some information
 on the new system, and easily converts The Gardener to the new
-format manually. He then uses a utility to build The Gardener 
+format. He then uses a utility to build The Gardener 
 into a single file which he uploads to 
 panelextensions.gnome.org. As part of the upload process, 
 panelextensions.gnome.org gathers some information about
@@ -177,35 +236,22 @@ become a professional open source developer. Since he's had such good
 luck with GNOME, Norm decides to develop a GNOME panel applet to
 display the size of his retirement account. Norm
 finds a tutorial on developing GNOME panel applets that can be posted on
-panelextensions.gnome.org and learns some Python and XML. 
+panelextensions.gnome.org and learns some Python.
 </p>
 <p>
 Norm first writes a Python script to interface with his bank's online
 banking system. He uses Inkscape to create a nice icon for his
-applet and creates an appropriate .server file for bonobo. Norm then
-creates a configuration file using XML which specifies the role of each
-piece.
+applet and creates an xml file specifying a context menu layout. Norm then
+uses <code> gebb</code>, the gnome extension bundle builder, to create an XML
+configuration file that includes information about each file to be included 
+in the bundle. 
 </p>
-<p class="open">
-"other relevant information about how the pieces should work together"
-is rather vague, and should be clarified. I would greatly appreciate
-the input of anyone with some experience in this kind of thing
-regarding what kinds of information should be included in this kind of
-configuration file. One thing I do want to try to do is keep the
-configuration file as simple as possible. Listing each piece and a
-little information about each piece should be just about right. The
-question is, what kind of information? Thanks!
-</p>
+
 <p>
 Norm now places all of the files for his applet into a directory and
-runs the gnome-extension-bundle-builder (Gebb?). Gebb finds the
-configuration file and packs all of the pieces into a single file,
-probably either a zip file or an XML file.
-</p>
-<p class="tech">
-We would like to be able to include any number of different types of
-files in these bundles. To accomplish this we will be ausing a zip
-format file with a new extension.
+runs <code>gebb</code>.
+<code>gebb</code> finds the configuration file and packs all of the pieces 
+into a zip file with a .gpe file extension.
 </p>
 <p>
 Once Norm finishes creating a bundle, he uploads it to
@@ -216,7 +262,7 @@ automatically.
 </p>
 <p class="tech">
 Ideally Norm will be able to sign his applets before uploading them,
-but this will probably not be present in the first version.
+but this will not be present in the first version.
 </p>
 <h2>Non-goals</h2>
 <ul>
@@ -227,10 +273,17 @@ existing applets will be ported to the new system. The first release
 will not include ports of existing applets.
 </li>
 <li>
+We will not integrate the extension system into the panel proper for the first
+release. As noted in Scenario 1, the current implementation consists of an 
+"Extension Container" old-style applet which can load and run extension 
+bundles. 
+</li>
+<li>
 We will not support languages other than Python for the first
 release. Using a scripting language for our applets will provide
 excellent portability and make development easy. This will hopefully
-encourage novel applications. Support for other languages can be added later.
+encourage novel applications. Support for other languages, if feasible,
+ can be added later.
 </li>
 <li>
 We will not support signing applets in the first release. For
@@ -256,26 +309,6 @@ security, this should be a planned addition.
 <td>
 </tr>
 </table>
-<h2>Manage Applets Dialog</h2>
-<p>
-When Norm the GNOME user clicks on "Manage Applets" on the GNOME panel
-context menu, he sees a dialog allowing him to manage his GNOME panel
-extensions:
-</p>
-<img alt="Manage applets dialog" src="manageappletsdialog.png"/>
-<p>
-From this dialog, Norm can delete applets from his computer, adjust
-applet preferences (which he should also be able to do from the
-context menu for the applet's display on the GNOME panel), view
-a list of installed applets, and click on a button to access
-panelextensions.gnome.org. 
-
-</p>
-<p class="tech">
-For the first version, the manage applets dialog will be accessible
-from context menu of the extension container applet. 
-
-</p>
 
 <h2>Extension Structure</h2>
 <p>
@@ -283,34 +316,35 @@ For the first release, we will only support extensions written in
 Python. Future support could be added for other languages.
 </p>
 <p>
-All extensions will be subclasses of the PanelExtension class which
-will provide methods to 
+All extensions will be subclasses of a PanelExtension class which
+will provide methods to create a context menu and interface with the 
+current panel and applet system.
 </p>
 <p>
-Applets will consist of three parts:
+Extensions will consist of three parts:
 <ul>
 <li>
 Resource files like images, XML (glade files, schemas, etc), and
 anything else developers would like to use.
 </li>
 <li>
-A Python script. Future support could be added for other scripting
+A primary Python script. Future support could be added for other scripting
 languages, but scripting languages will probably be the only ones
 supported. Users should not need to have build tools installed to
 install applets.
 </li>
 <li>
-A "manifest," or some kind of file, probably written in XML, to tie
-the pieces together and give instructions to the installer.
+A manifest.xml file to provide information on the various pieces of the 
+bundle. This file can be built using various gebb commands.
 </li>
 </ul>
 
 Developers will need to simply place the files into a directory
 together and run a utility that will examine the manifest and bundle
-everything together into a single file (the installer). They will then 
-be able to upload the installer to a central distribution site where
-users can simply click on a link to the installer to have the new
-applet appear on their GNOME panel.
+everything together into a single file, the bundle. They will then 
+be able to upload the bundle to a central distribution site where
+users can simply click on a link to the bundle to have the new
+extension installed on their system.
 </p>
 
 

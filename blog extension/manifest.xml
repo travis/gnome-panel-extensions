@@ -1,3 +1,3 @@
 <?xml version="1.0" ?>
 <?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem> 
-<file name="blog_applet.py" type="main"/><file name="GNOME_BlogApplet.xml"/><name>Blog Poster </name><description>Blog Poster makes it easy to post to blogs </description></gpem>
+<file name="blog_applet.py" type="main"/><name>Blog extension </name><description>Blog extension posts to blogs </description></gpem>
