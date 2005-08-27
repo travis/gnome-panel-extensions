@@ -31,7 +31,7 @@ color: grey;
 div#sidebar {
 position: absolute;
 height: 100%;
-width: 8em;
+
 top: 6em;
 left: -1px;
 text-align: center;
@@ -47,6 +47,7 @@ display: block;
 background: grey;
 color: #ede6db;
 margin: 0.1em;
+
  }
 div#sidebar>a:hover{ 
 background: #ede6db;
