@@ -20,7 +20,9 @@ new_server_file.write(server_file.toprettyxml())
 new_server_file.close()
 
 shutil.copy( "container/GNOME_ExtensionContainer.server", "/usr/lib/bonobo/servers/")
+
 shutil.copy( "container/extension_container_applet.py", "/usr/lib/gnome-panel")
+os.chmod("/usr/lib/gnome-panel/extension_container_applet.py",0555)
 shutil.copy( "container/extension_container.png", "/usr/share/pixmaps")
 
 python_path = None

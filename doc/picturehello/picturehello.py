@@ -16,15 +16,20 @@ class ImportHelloExtension(panel_extension.PanelExtension):
         self.__gobject_init__()
         panel_extension.PanelExtension.__init__(self)
 
+
+
     def __extension_init__(self):
 
         bundle = self.get_bundle()
 
-        image = bundle.open_gtk_image("hello.png")
+	
+	image = bundle.open_gtk_image("hello.png")
+	
 
         self.add(image)
 
         self.show_all()
+
 
 gobject.type_register(ImportHelloExtension)
         

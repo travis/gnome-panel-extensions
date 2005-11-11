@@ -33,11 +33,11 @@ class ImportHelloExtension(panel_extension.PanelExtension):
 
         if use_image:
             
-
-            
             image = self.bundle.open_gtk_image("hello.png")
-            
-            self.add(image)
+
+	    self.add(image)
+	    print dir(image)
+	    image.show()
 
             self.client.set_bool(self.prefs_key+"/useimage", False)
             
