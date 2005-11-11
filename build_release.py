@@ -42,13 +42,13 @@ cp("doc/chooseextension.png", "gnome-panel-extensions-0.0.2/doc")
 dirnames = os.listdir("doc")
 
 for dirname in dirnames:
-    if os.path.isdir(os.path.join("doc/",dirname)) and not dirname == ".svn":
+    if os.path.isdir(os.path.join("doc/",dirname)) and not (dirname == ".svn" or dirname == "CVS"):
         mkdir(os.path.join("gnome-panel-extensions-0.0.2/doc",dirname))
         filenames = os.listdir(os.path.join("doc/",dirname))
 
         for filename in filenames:
 
-            if not filename.endswith("~") and not filename == ".svn":
+            if not filename.endswith("~") and not (filename == ".svn" or filename == "CVS"):
                 cp(os.path.join(os.path.join("doc/",dirname),filename),os.path.join("gnome-panel-extensions-0.0.2/doc/",dirname))
 
 cp("release/install.py", "gnome-panel-extensions-0.0.2")
