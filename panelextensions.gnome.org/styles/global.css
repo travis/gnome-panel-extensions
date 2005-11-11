@@ -39,7 +39,7 @@ img#titleimage {
 div#sidebar {
 
 z-index: 6;
-width: 10em;
+width: 9em;
 position: fixed;
 height: 100%;
 background: #7d97ff;
@@ -90,7 +90,7 @@ div#main {
 position: absolute;
 height: 100%;
 
-left: 8em;
+left: 9em;
 right: 2em;
 background: #c3cef9;
 padding: 2em;
