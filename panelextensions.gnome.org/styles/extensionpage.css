@@ -1,0 +1,94 @@
+div#extensionlistlabel{ 
+display: block;
+width: 80%;
+ }
+
+div#extensionlistlabel{
+position: relative;
+left: 0em;
+/*background: lightblue;
+width: 35em;
+border: solid grey 1px;
+padding-left: 1em;
+padding-right: 1em;
+bottom: -1px; 
+*/
+font-size: 1.5em;
+font-weight: bold;
+color: grey;
+ }
+
+div#extensionlist{ 
+
+width: 35em;
+position: relative;
+left: 1em;
+
+padding-top: 1em;
+padding-left: 1em;
+padding-right: 1em;
+ }
+
+div.extensiondescription{ 
+position: relative;
+border: 1px grey solid;
+font-weight: bold;
+
+
+height: 7em;
+background: #ede6db;
+padding: 0.5em;
+display: block;
+
+margin-bottom: 1em;
+ }
+
+img.icon{ 
+margin-right: 1em;
+width: 6em;
+
+position: absolute;
+ }
+
+span.name{
+left: 8em;
+display: block;
+position: absolute;
+
+
+ }
+
+span.desc{ 
+
+left: 8em;
+top: 2em;
+width: 25em;
+display: block;
+position: absolute;
+
+ }
+
+span.linkbox{ 
+font-size: 0.75em;
+font-weight: normal; 
+position: absolute;
+display: block;
+bottom: 0;
+left: 0;
+width: 100%;
+background: grey;
+ }
+
+span.linkbox>a{ 
+/*border: 1px solid grey;*/
+padding-left: 0.25em;
+padding-right: 0.25em;
+color: #ede6db;
+
+ }
+span.linkbox>a:hover { 
+color: grey;
+background: #ede6db;
+
+
+ }

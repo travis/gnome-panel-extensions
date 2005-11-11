@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+print "Content-type: text/html"
+print
+print '''<?xml version="1.0"?>
+
+<!DOCTYPE html 
+	PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <title>panelextensions.gnome.org</title>
+ <link rel="stylesheet" type="text/css" href="../styles/global.css"/>
+ <link rel="stylesheet" type="text/css" href="../styles/extensionlist.css"/>
+
+
+
+
+</head>
+
+<body>
+
+'''
+
+import sys
+sys.stderr = sys.stdout
+
+import os
+
+import shelve
+
+
+    
+extension_database = shelve.open("../extensions/extension_data")
+
+extension_list = extension_database.values()
+extension_database.close()
+#session = Session.Session(req)
+#if session.is_new():
+#    session.invalidate()
+#    username=None
+#else:
+#    username = session['userdata'].username
+
+print '<div id="extensionlistlabel">New Extensions:</div>'
+print '<div id="extensionlist">'
+for extension in extension_list:
+	if extension.icon:
+		icon = extension.icon
+	else:
+		icon = "../images/default-icon.png"
+        print '''
+        <div class="extensiondescription">
+        <img class="icon" src="%s" />
+        <span class="name">%s</span>
+        <span class="desc">%s</span>
+        <span class="linkbox"><a href="../extensions/bundles/%s">Download</a>
+	                      <a href="extension_page.pyg?name=%s" target="_top">Details</a>
+        '''%("../images/"+str(icon),
+	     str(extension.name),
+	     str(extension.description),
+	     str(extension.bundlename),
+	     str(extension.bundlename))
+
+        #if username == extension.username:
+        #    print '<a href="../upload.py/delete?bundlename=%s">Delete</a><br/>'%extension.bundlename
+
+
+        print "</span>\n</div>"
+
+print "</div></body></html>"
+        
+        
+
+
+
+    
+
