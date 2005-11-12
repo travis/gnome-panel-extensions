@@ -19,7 +19,7 @@
         <oaf_attribute name="name" type="string" value="Extension Container"/>
         <oaf_attribute name="description" type="string" value="Contains GNOME panel extensions"/>
         <oaf_attribute name="panel:category" type="string" value="Accessories"/>
-        <oaf_attribute name="panel:icon" type="string" value="extension_container.png"/>
+        <oaf_attribute name="panel:icon" type="string" value="extension_puzzle.svg"/>
 </oaf_server>
 
 </oaf_info>

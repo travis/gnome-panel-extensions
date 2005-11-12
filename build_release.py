@@ -10,7 +10,7 @@ mkdir("gnome-panel-extensions-0.0.2")
 mkdir("gnome-panel-extensions-0.0.2/container")
 cp("container/extension_container_applet.py","gnome-panel-extensions-0.0.2/container")
 cp("container/GNOME_ExtensionContainer.server", "gnome-panel-extensions-0.0.2/container")
-cp("container/extension_container.png", "gnome-panel-extensions-0.0.2/container")
+cp("container/extension_puzzle.svg", "gnome-panel-extensions-0.0.2/container")
 
 mkdir("gnome-panel-extensions-0.0.2/container/panel_extension")
 filenames = os.listdir("container/panel_extension")

@@ -12,7 +12,9 @@ except: print "Could not remove server file"
 try: os.remove("/usr/lib/gnome-panel/extension_container_applet.py")
 except: print "Could not remove applet"
 try: os.remove("/usr/share/pixmaps/extension_container.png")
-except: print "Could not remove container icon"
+except: pass
+try: os.remove("/usr/share/pixmaps/extension_puzzle.svg")
+except: print "Could not remove container applet icon"
 
 try: shutil.rmtree("/usr/lib/python2.4/site-packages/panel_extension")
 except:

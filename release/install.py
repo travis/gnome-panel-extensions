@@ -23,7 +23,7 @@ shutil.copy( "container/GNOME_ExtensionContainer.server", "/usr/lib/bonobo/serve
 
 shutil.copy( "container/extension_container_applet.py", "/usr/lib/gnome-panel")
 os.chmod("/usr/lib/gnome-panel/extension_container_applet.py",0555)
-shutil.copy( "container/extension_container.png", "/usr/share/pixmaps")
+shutil.copy( "container/extension_puzzle.svg", "/usr/share/pixmaps")
 
 python_path = None
 if os.path.isdir("/usr/lib/python2.4/site-packages"):
