@@ -1,3 +1,0 @@
-<?xml version="1.0" ?>
-<?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem> 
-<file name="firsthello.py" type="main"/><name>First Hello Extension </name><description>First Hello Extension is probably the most basic extension one could write. </description></gpem>

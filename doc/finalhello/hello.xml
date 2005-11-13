@@ -1,7 +1,0 @@
-<Root>
-  <popups>
-    <popup name="button3">
-      <menuitem name="Sweet"     verb="Sweet" _label="_Sweet..."     pixtype="stock" pixname="gnome-stock-about"/>
-    </popup>
-  </popups>
-</Root>

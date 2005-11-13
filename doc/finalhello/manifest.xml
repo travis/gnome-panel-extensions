@@ -1,3 +1,0 @@
-<?xml version="1.0" ?>
-<?xml-stylesheet type="text/xsl" href="styles/manifest.xsl" ?><gpem> 
-<file name="finalhello.py" type="main"/><file name="hello_globals.py"/><file name="hello.xml"/><file name="hello.png"/><file name="icon.png" type="icon"/><name>Final Hello Extension </name><description>Final Hello Extension Rocks! </description></gpem>
