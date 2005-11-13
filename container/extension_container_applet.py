@@ -1,7 +1,20 @@
 #!/usr/bin/env python
-'''
-Extension Container Applet
-(c) 2005 travis f vachon
+'''Extension Container Applet.
+(c) 2005 Travis F Vachon
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+ This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+ You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+02111-1307, USA.
+
 
 The Extension Container applet is designed to load and run GNOME
 Panel Extensions. See http://www.gnome.org/~tvachon for more
@@ -33,8 +46,7 @@ else:
     run_in_window = False
 
 class NoBundleLoadedError(Exception):
-    '''
-    Raised when some object requests a loaded bundle before a bundle has been loaded.
+    '''Raised when some object requests a loaded bundle before a bundle has been loaded.
     '''
     def __init__(self, *args):
         Exception.__init__(self, *args)
@@ -43,9 +55,9 @@ class NoBundleLoadedError(Exception):
     
   
 class ExtensionContainerApplet(gnomeapplet.Applet):
-    '''
-    ExtensionContainerApplet is a classic GNOME panel applet that runs new
-    GNOME panel extensions. 
+    '''ExtensionContainerApplet is a classic GNOME panel applet that runs new GNOME panel extensions.
+
+    This class is meant to be used as is, and should probably not be modified except for bug fixes.
     '''
     def __init__(self):
         self.__gobject_init__()
@@ -89,8 +101,6 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
             
             self.add(load_button)
 
-            #self.ui_manager.add_ui_from_string()
-
             self.show_all()
 
             print self.get_control()
@@ -99,6 +109,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
 
     def loadToggleButton(self):
+        '''Construct button to launch the extension selection dialog.'''
         self.toggle = gtk.ToggleButton()
         
 
@@ -115,6 +126,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     
 
     def load_dialog_closed(self):
+        '''Callback for close button of extension selection dialog.'''
         try:
             self.toggle.set_active(False)
         except:
@@ -123,11 +135,9 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
     
     
     def load_bundle(self, bundleFileName):
-        """
-        Loads up bundle and returns initialized extension object.
+        """Loads up bundle and returns initialized extension object.
 
         Returns a Bundle object, as defined in extension_bundle
-             
         """
 
         if not os.path.isdir(extension_container_globals.extension_dir):
@@ -172,6 +182,7 @@ class ExtensionContainerApplet(gnomeapplet.Applet):
 
     
     def get_loaded_bundle(self):
+        '''Utility function to make bundle object available to panel_extension module.'''
         if self.loaded_bundle:
             return self.loaded_bundle
         else:
@@ -220,15 +231,15 @@ if len(sys.argv) == 2 and sys.argv[1] == "run-in-window":
 	sys.exit()
 
 
-def foo(applet, iid):
+def return_applet(applet, iid):
     print "Returning container applet"
     return applet.init()
 
-# run in seperate window for testing
+
 
 gnomeapplet.bonobo_factory("OAFIID:GNOME_ExtensionContainerApplet_Factory", 
                             ExtensionContainerApplet.__gtype__, 
-                            "ExtensionContainer", "0", foo)
+                            "ExtensionContainer", "0", return_applet)
 
 
 
