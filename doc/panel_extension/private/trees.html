@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module and Class Hierarchies</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="panel_extension-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th bgcolor="#70b0f0" class="navselect">&nbsp;&nbsp;&nbsp;Trees&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[show&nbsp;private&nbsp;|&nbsp;<a href="../public/trees.html">hide&nbsp;private</a>]</font></td></tr>
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="trees.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF MODULE HIERARCHY =========== -->
+<h2>Module Hierarchy</h2>
+<ul>
+<li> <b><a href="panel_extension-module.html"><code>panel_extension</code></a></b>: <i>Panel_extension package.</i>
+  <ul>
+    <li> <b><a href="panel_extension.extension_bundle-module.html"><code>extension_bundle</code></a></b>: <i>extension_bundle module (c) 2005 travis f vachon</i>
+    <li> <b><a href="panel_extension.extension_container_globals-module.html"><code>extension_container_globals</code></a></b>: <i>extension_container_globals module (c) 2005 travis f vachon</i>
+  </ul>
+</ul>
+
+<!-- =========== START OF CLASS HIERARCHY =========== -->
+<h2>Class Hierarchy</h2>
+<ul>
+  <li> <b><a href="__builtin__.object-class.html"><code>__builtin__.object</code></a></b>: <i>
+The most base type</i>
+    <ul>
+  <li> <b><a href="panel_extension.extension_bundle.Bundle-class.html"><code>panel_extension.extension_bundle.Bundle</code></a></b>: <i>
+Bundle is a class to contain a bundle which provides methods to allow 
+for easy extraction of files from the bundle.</i>
+  <li> <b><a href="gobject.GObject-class.html"><code>gobject.GObject</code></a></b>: <i>
+Object GObject...</i>
+    <ul>
+  <li> <b><a href="gtk.Object-class.html"><code>gtk.Object</code></a></b>: <i>
+Object GtkObject...</i>
+    <ul>
+  <li> <b><a href="gtk.Widget-class.html"><code>gtk.Widget</code></a></b>: <i>
+Object GtkWidget
+
+Signals from GObject:
+  notify (GParam)
+
+Signals from GtkObject:
+  destroy ()
+
+Signals from GtkWidget:
+  show ()
+  hide ()
+  map ()
+  unmap ()
+  realize ()
+  unrealize ()
+  size-request (GtkRequisition)
+  size-allocate (GdkRectangle)
+  state-changed (GtkStateType)
+  parent-set (GtkWidget)
+  hierarchy-changed (GtkWidget)
+  style-set (GtkStyle)
+  direction-changed (GtkTextDirection)
+  grab-notify (gboolean)
+  child-notify (GParam)
+  mnemonic-activate (gboolean) -&gt; gboolean
+  grab-focus ()
+  focus (GtkDirectionType) -&gt; gboolean
+  event (GdkEvent) -&gt; gboolean
+  event-after (GdkEvent)
+  button-press-event (GdkEvent) -&gt; gboolean
+  button-release-event (GdkEvent) -&gt; gboolean
+  scroll-event (GdkEvent) -&gt; gboolean
+  motion-notify-event (GdkEvent) -&gt; gboolean
+  delete-event (GdkEvent) -&gt; gboolean
+  destroy-event (GdkEvent) -&gt; gboolean
+  expose-event (GdkEvent) -&gt; gboolean
+  key-press-event (GdkEvent) -&gt; gboolean
+  key-release-event (GdkEvent) -&gt; gboolean
+  enter-notify-event (GdkEvent) -&gt; gboolean
+  leave-notify-event (GdkEvent) -&gt; gboolean
+  configure-event (GdkEvent) -&gt; gboolean
+  focus-in-event (GdkEvent) -&gt; gboolean
+  focus-out-event (GdkEvent) -&gt; gboolean
+  map-event (GdkEvent) -&gt; gboolean
+  unmap-event (GdkEvent) -&gt; gboolean
+  property-notify-event (GdkEvent) -&gt; gboolean
+  selection-clear-event (GdkEvent) -&gt; gboolean
+  selection-request-event (GdkEvent) -&gt; gboolean
+  selection-notify-event (GdkEvent) -&gt; gboolean
+  selection-received (GtkSelectionData, guint)
+  selection-get (GtkSelectionData, guint, guint)
+  proximity-in-event (GdkEvent) -&gt; gboolean
+  proximity-out-event (GdkEvent) -&gt; gboolean
+  drag-leave (GdkDragContext, guint)
+  drag-begin (GdkDragContext)
+  drag-end (GdkDragContext)
+  drag-data-delete (GdkDragContext)
+  drag-motion (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-drop (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-data-get (GdkDragContext, GtkSelectionData, guint, guint)
+  drag-data-received (GdkDragContext, gint, gint, GtkSelectionData, guint, guint)
+  visibility-notify-event (GdkEvent) -&gt; gboolean
+  client-event (GdkEvent) -&gt; gboolean
+  no-expose-event (GdkEvent) -&gt; gboolean
+  window-state-event (GdkEvent) -&gt; gboolean
+  grab-broken-event (GdkEvent) -&gt; gboolean
+  popup-menu () -&gt; gboolean
+  show-help (GtkWidgetHelpType) -&gt; gboolean
+  accel-closures-changed ()
+  screen-changed (GdkScreen)
+  can-activate-accel (guint) -&gt; gboolean
+
+Properties from GtkObject:
+  user-data -&gt; gpointer: User Data
+    Anonymous User Data Pointer
+
+Properties from GtkWidget:
+  name -&gt; gchararray: Widget name
+    The name of the widget
+  parent -&gt; GtkContainer: Parent widget
+    The parent widget of this widget.</i>
+    <ul>
+  <li> <b><a href="gtk.Container-class.html"><code>gtk.Container</code></a></b>: <i>
+Object GtkContainer
+
+Signals from GObject:
+  notify (GParam)
+
+Signals from GtkObject:
+  destroy ()
+
+Signals from GtkWidget:
+  show ()
+  hide ()
+  map ()
+  unmap ()
+  realize ()
+  unrealize ()
+  size-request (GtkRequisition)
+  size-allocate (GdkRectangle)
+  state-changed (GtkStateType)
+  parent-set (GtkWidget)
+  hierarchy-changed (GtkWidget)
+  style-set (GtkStyle)
+  direction-changed (GtkTextDirection)
+  grab-notify (gboolean)
+  child-notify (GParam)
+  mnemonic-activate (gboolean) -&gt; gboolean
+  grab-focus ()
+  focus (GtkDirectionType) -&gt; gboolean
+  event (GdkEvent) -&gt; gboolean
+  event-after (GdkEvent)
+  button-press-event (GdkEvent) -&gt; gboolean
+  button-release-event (GdkEvent) -&gt; gboolean
+  scroll-event (GdkEvent) -&gt; gboolean
+  motion-notify-event (GdkEvent) -&gt; gboolean
+  delete-event (GdkEvent) -&gt; gboolean
+  destroy-event (GdkEvent) -&gt; gboolean
+  expose-event (GdkEvent) -&gt; gboolean
+  key-press-event (GdkEvent) -&gt; gboolean
+  key-release-event (GdkEvent) -&gt; gboolean
+  enter-notify-event (GdkEvent) -&gt; gboolean
+  leave-notify-event (GdkEvent) -&gt; gboolean
+  configure-event (GdkEvent) -&gt; gboolean
+  focus-in-event (GdkEvent) -&gt; gboolean
+  focus-out-event (GdkEvent) -&gt; gboolean
+  map-event (GdkEvent) -&gt; gboolean
+  unmap-event (GdkEvent) -&gt; gboolean
+  property-notify-event (GdkEvent) -&gt; gboolean
+  selection-clear-event (GdkEvent) -&gt; gboolean
+  selection-request-event (GdkEvent) -&gt; gboolean
+  selection-notify-event (GdkEvent) -&gt; gboolean
+  selection-received (GtkSelectionData, guint)
+  selection-get (GtkSelectionData, guint, guint)
+  proximity-in-event (GdkEvent) -&gt; gboolean
+  proximity-out-event (GdkEvent) -&gt; gboolean
+  drag-leave (GdkDragContext, guint)
+  drag-begin (GdkDragContext)
+  drag-end (GdkDragContext)
+  drag-data-delete (GdkDragContext)
+  drag-motion (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-drop (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-data-get (GdkDragContext, GtkSelectionData, guint, guint)
+  drag-data-received (GdkDragContext, gint, gint, GtkSelectionData, guint, guint)
+  visibility-notify-event (GdkEvent) -&gt; gboolean
+  client-event (GdkEvent) -&gt; gboolean
+  no-expose-event (GdkEvent) -&gt; gboolean
+  window-state-event (GdkEvent) -&gt; gboolean
+  grab-broken-event (GdkEvent) -&gt; gboolean
+  popup-menu () -&gt; gboolean
+  show-help (GtkWidgetHelpType) -&gt; gboolean
+  accel-closures-changed ()
+  screen-changed (GdkScreen)
+  can-activate-accel (guint) -&gt; gboolean
+
+Signals from GtkContainer:
+  add (GtkWidget)
+  remove (GtkWidget)
+  check-resize ()
+  set-focus-child (GtkWidget)
+
+Properties from GtkObject:
+  user-data -&gt; gpointer: User Data
+    Anonymous User Data Pointer
+
+Properties from GtkWidget:
+  name -&gt; gchararray: Widget name
+    The name of the widget
+  parent -&gt; GtkContainer: Parent widget
+    The parent widget of this widget.</i>
+    <ul>
+  <li> <b><a href="gtk.Bin-class.html"><code>gtk.Bin</code></a></b>: <i>
+Object GtkBin
+
+Signals from GObject:
+  notify (GParam)
+
+Signals from GtkObject:
+  destroy ()
+
+Signals from GtkWidget:
+  show ()
+  hide ()
+  map ()
+  unmap ()
+  realize ()
+  unrealize ()
+  size-request (GtkRequisition)
+  size-allocate (GdkRectangle)
+  state-changed (GtkStateType)
+  parent-set (GtkWidget)
+  hierarchy-changed (GtkWidget)
+  style-set (GtkStyle)
+  direction-changed (GtkTextDirection)
+  grab-notify (gboolean)
+  child-notify (GParam)
+  mnemonic-activate (gboolean) -&gt; gboolean
+  grab-focus ()
+  focus (GtkDirectionType) -&gt; gboolean
+  event (GdkEvent) -&gt; gboolean
+  event-after (GdkEvent)
+  button-press-event (GdkEvent) -&gt; gboolean
+  button-release-event (GdkEvent) -&gt; gboolean
+  scroll-event (GdkEvent) -&gt; gboolean
+  motion-notify-event (GdkEvent) -&gt; gboolean
+  delete-event (GdkEvent) -&gt; gboolean
+  destroy-event (GdkEvent) -&gt; gboolean
+  expose-event (GdkEvent) -&gt; gboolean
+  key-press-event (GdkEvent) -&gt; gboolean
+  key-release-event (GdkEvent) -&gt; gboolean
+  enter-notify-event (GdkEvent) -&gt; gboolean
+  leave-notify-event (GdkEvent) -&gt; gboolean
+  configure-event (GdkEvent) -&gt; gboolean
+  focus-in-event (GdkEvent) -&gt; gboolean
+  focus-out-event (GdkEvent) -&gt; gboolean
+  map-event (GdkEvent) -&gt; gboolean
+  unmap-event (GdkEvent) -&gt; gboolean
+  property-notify-event (GdkEvent) -&gt; gboolean
+  selection-clear-event (GdkEvent) -&gt; gboolean
+  selection-request-event (GdkEvent) -&gt; gboolean
+  selection-notify-event (GdkEvent) -&gt; gboolean
+  selection-received (GtkSelectionData, guint)
+  selection-get (GtkSelectionData, guint, guint)
+  proximity-in-event (GdkEvent) -&gt; gboolean
+  proximity-out-event (GdkEvent) -&gt; gboolean
+  drag-leave (GdkDragContext, guint)
+  drag-begin (GdkDragContext)
+  drag-end (GdkDragContext)
+  drag-data-delete (GdkDragContext)
+  drag-motion (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-drop (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-data-get (GdkDragContext, GtkSelectionData, guint, guint)
+  drag-data-received (GdkDragContext, gint, gint, GtkSelectionData, guint, guint)
+  visibility-notify-event (GdkEvent) -&gt; gboolean
+  client-event (GdkEvent) -&gt; gboolean
+  no-expose-event (GdkEvent) -&gt; gboolean
+  window-state-event (GdkEvent) -&gt; gboolean
+  grab-broken-event (GdkEvent) -&gt; gboolean
+  popup-menu () -&gt; gboolean
+  show-help (GtkWidgetHelpType) -&gt; gboolean
+  accel-closures-changed ()
+  screen-changed (GdkScreen)
+  can-activate-accel (guint) -&gt; gboolean
+
+Signals from GtkContainer:
+  add (GtkWidget)
+  remove (GtkWidget)
+  check-resize ()
+  set-focus-child (GtkWidget)
+
+Properties from GtkObject:
+  user-data -&gt; gpointer: User Data
+    Anonymous User Data Pointer
+
+Properties from GtkWidget:
+  name -&gt; gchararray: Widget name
+    The name of the widget
+  parent -&gt; GtkContainer: Parent widget
+    The parent widget of this widget.</i>
+    <ul>
+  <li> <b><a href="gtk.EventBox-class.html"><code>gtk.EventBox</code></a></b>: <i>
+Object GtkEventBox
+
+Signals from GObject:
+  notify (GParam)
+
+Signals from GtkObject:
+  destroy ()
+
+Signals from GtkWidget:
+  show ()
+  hide ()
+  map ()
+  unmap ()
+  realize ()
+  unrealize ()
+  size-request (GtkRequisition)
+  size-allocate (GdkRectangle)
+  state-changed (GtkStateType)
+  parent-set (GtkWidget)
+  hierarchy-changed (GtkWidget)
+  style-set (GtkStyle)
+  direction-changed (GtkTextDirection)
+  grab-notify (gboolean)
+  child-notify (GParam)
+  mnemonic-activate (gboolean) -&gt; gboolean
+  grab-focus ()
+  focus (GtkDirectionType) -&gt; gboolean
+  event (GdkEvent) -&gt; gboolean
+  event-after (GdkEvent)
+  button-press-event (GdkEvent) -&gt; gboolean
+  button-release-event (GdkEvent) -&gt; gboolean
+  scroll-event (GdkEvent) -&gt; gboolean
+  motion-notify-event (GdkEvent) -&gt; gboolean
+  delete-event (GdkEvent) -&gt; gboolean
+  destroy-event (GdkEvent) -&gt; gboolean
+  expose-event (GdkEvent) -&gt; gboolean
+  key-press-event (GdkEvent) -&gt; gboolean
+  key-release-event (GdkEvent) -&gt; gboolean
+  enter-notify-event (GdkEvent) -&gt; gboolean
+  leave-notify-event (GdkEvent) -&gt; gboolean
+  configure-event (GdkEvent) -&gt; gboolean
+  focus-in-event (GdkEvent) -&gt; gboolean
+  focus-out-event (GdkEvent) -&gt; gboolean
+  map-event (GdkEvent) -&gt; gboolean
+  unmap-event (GdkEvent) -&gt; gboolean
+  property-notify-event (GdkEvent) -&gt; gboolean
+  selection-clear-event (GdkEvent) -&gt; gboolean
+  selection-request-event (GdkEvent) -&gt; gboolean
+  selection-notify-event (GdkEvent) -&gt; gboolean
+  selection-received (GtkSelectionData, guint)
+  selection-get (GtkSelectionData, guint, guint)
+  proximity-in-event (GdkEvent) -&gt; gboolean
+  proximity-out-event (GdkEvent) -&gt; gboolean
+  drag-leave (GdkDragContext, guint)
+  drag-begin (GdkDragContext)
+  drag-end (GdkDragContext)
+  drag-data-delete (GdkDragContext)
+  drag-motion (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-drop (GdkDragContext, gint, gint, guint) -&gt; gboolean
+  drag-data-get (GdkDragContext, GtkSelectionData, guint, guint)
+  drag-data-received (GdkDragContext, gint, gint, GtkSelectionData, guint, guint)
+  visibility-notify-event (GdkEvent) -&gt; gboolean
+  client-event (GdkEvent) -&gt; gboolean
+  no-expose-event (GdkEvent) -&gt; gboolean
+  window-state-event (GdkEvent) -&gt; gboolean
+  grab-broken-event (GdkEvent) -&gt; gboolean
+  popup-menu () -&gt; gboolean
+  show-help (GtkWidgetHelpType) -&gt; gboolean
+  accel-closures-changed ()
+  screen-changed (GdkScreen)
+  can-activate-accel (guint) -&gt; gboolean
+
+Signals from GtkContainer:
+  add (GtkWidget)
+  remove (GtkWidget)
+  check-resize ()
+  set-focus-child (GtkWidget)
+
+Properties from GtkObject:
+  user-data -&gt; gpointer: User Data
+    Anonymous User Data Pointer
+
+Properties from GtkWidget:
+  name -&gt; gchararray: Widget name
+    The name of the widget
+  parent -&gt; GtkContainer: Parent widget
+    The parent widget of this widget.</i>
+    <ul>
+  <li> <b><a href="panel_extension.PanelExtension-class.html"><code>panel_extension.PanelExtension</code></a></b>: <i>
+A super class for all extensions.</i>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+    </ul>
+  <li> <b><a href="__builtin__.type-class.html"><code>__builtin__.type</code></a></b>: <i>
+type(object) -&gt; the object's type type(name, bases, dict) -&gt; a 
+new type</i>
+    <ul>
+  <li> <b><a href="gobject.GObjectMeta-class.html"><code>gobject.GObjectMeta</code></a></b>: <i>
+GObject Metaclass -- automatically registers GObject subclasses as new 
+GType's</i>
+    </ul>
+    </ul>
+  <li> <b><a href="exceptions.Exception-class.html"><code>exceptions.Exception</code></a></b>: <i>
+Common base class for all exceptions.</i>
+    <ul>
+  <li> <b><a href="panel_extension.NoAppletError-class.html"><code>panel_extension.NoAppletError</code></a></b>: <i>
+Raised when extensions are run without a container applet.</i>
+  <li> <b><a href="exceptions.StandardError-class.html"><code>exceptions.StandardError</code></a></b>: <i>
+Base class for all standard Python exceptions.</i>
+    <ul>
+  <li> <b><a href="panel_extension.extension_bundle.InvalidBundle-class.html"><code>panel_extension.extension_bundle.InvalidBundle</code></a></b>: <i>
+Used to indicate a bundle is either non-existent or is missing a 
+necessary piece.</i>
+  <li> <b><a href="panel_extension.extension_bundle.NoIconError-class.html"><code>panel_extension.extension_bundle.NoIconError</code></a></b>: <i>
+Used to indicate that no icon was specified for this file.</i>
+    </ul>
+    </ul>
+</ul>
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="panel_extension-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Sun Nov 13 01:47:30 2005</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>
